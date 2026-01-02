@@ -9,15 +9,16 @@
     </head>
     <body>
         <div id="game-container">
-            <div id="dialog-window">
+            <div id="dialog-window" class="hidden">
                     <div id="dialog-name-container">
-                        <div id="dialog-name"></div> </div>
+                        <div id="dialog-name"></div></div>
                     <div id="dialog-text-container">
-                        <div id="dialog-text"></div> </div>
-                    <div id="dialog-input" style="display:none;">
+                        <div id="dialog-text"></div></div>
+                    <div id="dialog-input" class="hidden">
                         <input id="player-name-input" type="text" placeholder="名前を入力" />
                         <button id="player-name-submit">OK</button>
                     </div>
+                    <div id="dialog-choices" class="hidden"></div>
             </div>
         </div>
         <script type="module" src="src/main.js"></script>
