@@ -18,9 +18,10 @@ export default class DialogManager {
         }
     }
 //textContentはinnerTextの上位互換
-    start(dialogArray,startId=null) {
+    start(dialogArray,startId=null,speakerName=null) {
         //null
         this.currentSequence = dialogArray;
+        this.activeSpeakerName=speakerName;
         
         if(startId){
             const index=this.currentSequence.findIndex(l=>l.id===startId);
@@ -53,7 +54,7 @@ export default class DialogManager {
             .replaceAll('[[NAME]]', this.playerName); //全てのdialogは一回ここを通る
           //.replaceAll([[]],this);
 
-        this.elements.name.textContent=line.name;
+        this.elements.name.textContent=this.activeSpeakerName || line.name;
         this.elements.text.textContent=displayText;
 
         switch (line.type) {

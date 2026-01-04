@@ -1,19 +1,20 @@
 import Player from './Player.js';
 import DialogManager from './DialogManager.js';
 import NPC from './NPC.js';
-import House from './House.js';
+//import House from './House.js';
 
 export default class World extends Phaser.Scene{
     constructor(){
         super({key:'World'});
 
         this.player=null;
-        this.elder=null;
         this.cursors=null;
         this.readyTalking=false;
         this.isWraping=false;
         this.money=0;
         this.moneyText=null;
+        this.villagers=null;
+        this.nearstNPC=null;
         this.SERVER_URL='http://localhost:3000';
     }
     async syncMoneyWithServer(newMoney){
@@ -73,25 +74,23 @@ export default class World extends Phaser.Scene{
         this.player=new Player(this,100,300,'player');
     //--------------------------------------------------------NPC-------------------------------------------------------------
         //this.elder=new NPC(this,800,300,'player');
-        this.villagers=this.physics.add.group({
-            defaultKey:'villager',
-            setGravityY:0,
-            collideWorldBounds:true
-        });
+        this.villagers=this.physics.add.group();
 
         const villagerData=[
-            {x:800,y:300,key:'player'},
-            {x:200,y:400,key:'player'},
-            {x:100,y:600,key:'player'},
+            {x:800,y:300,key:'player',startId:'greet',name:'マイク'},
+            {x:200,y:400,key:'player',startId:'start',name:'ジェシカ'},
+            {x:100,y:600,key:'player',startId:'ask_ready',name:'サンドラ'},
         ];
 
         villagerData.forEach(data=>{
-            const newVillager=new NPC(data.x,data.y,data.key);
+            //第五引数のdataはNPC.jsでconfigとして受け取る。必要に応じてconfig.startIdで取得できる。第六まで増やす必要もない。
+            const newVillager=new NPC(this,data.x,data.y,data.key,data);//this忘れ、どこに書けばいいかわからなかったことによるエラー。
+            this.villagers.add(newVillager);
         });
     //----------------------------------------------------------当たり判定-----------------------------------------------------------------------
         this.physics.add.collider(this.player,this.worldLayer);
-        this.physics.add.collider(this.elder,this.worldLayer);
-        this.physics.add.collider(this.player,this.elder);
+        this.physics.add.collider(this.villagers,this.worldLayer);
+        this.physics.add.collider(this.player,this.villagers);
     //-------------------------------------------------------------ログ--------------------------------------------------------------------------
         this.dialogManager=new DialogManager();
 
@@ -104,8 +103,8 @@ export default class World extends Phaser.Scene{
                 this.money+=100;
                 if(this.moneyText) this.moneyText.setText(`所持金：${this.money}`);
                 this.syncMoneyWithServer(this.money);
-                this.dialogManager.start(ch1Data,'start');
-                this.elder.showIcon(true);
+                this.dialogManager.start(ch1Data,this.nearstNPC.startId,this.nearstNPC.npcName);
+                this.nearstNPC.showIcon(true);
             }else if(this.dialogManager.isTalking){
                 const currentLine=this.dialogManager.currentSequence[this.dialogManager.currentIndex];
 
@@ -122,7 +121,20 @@ export default class World extends Phaser.Scene{
     }
     update(time,delta){
         this.player.update();
-        this.elder.update(time, delta);
+        
+        let minDistance=100;
+        let closestNPC=null;
+
+        this.villagers.getChildren().forEach(v=>{
+            v.update(time,delta);
+            v.showIcon(false);
+
+            const dist=Phaser.Math.Distance.Between(this.player.x,this.player.y,v.x,v.y);
+            if(dist<minDistance){
+                minDistance=dist;
+                closestNPC=v;
+            }
+        });
         /*const tile = this.worldLayer.getTileAtWorldXY(this.player.x, this.player.y);
         if(tile){
             console.log('player tile index:', tile.index);
@@ -135,17 +147,13 @@ export default class World extends Phaser.Scene{
             });
         }*/
 
-
-        const distance=Phaser.Math.Distance.Between(
-            this.player.x,this.player.y,
-            this.elder.x,this.elder.y
-        );
-        if(distance<100 && !this.dialogManager.isTalking){
+        if(closestNPC && !this.dialogManager.isTalking){
             this.readyTalking=true;
-            this.elder.showIcon(true);
+            this.nearstNPC=closestNPC;
+            this.nearstNPC.showIcon(true);
         }else{
             this.readyTalking=false;
-            this.elder.showIcon(false);
+            this.nearstNPC=null;
         }
     }
 }
