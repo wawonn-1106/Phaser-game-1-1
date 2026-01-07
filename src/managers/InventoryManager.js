@@ -1,4 +1,4 @@
-export default class Inventory{
+export default class InventoryManager{
     constructor(){
         this.isOpenInv=false;
 
