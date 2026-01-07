@@ -7,6 +7,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.setScale(0.1).refreshBody();
         this.setCollideWorldBounds(true);
+        this.setPushable(false);
 
         this.speed=200;
         this.jump_speed=-330;
@@ -14,7 +15,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
         this.cursors=scene.cursors;
     }
     update(){
-        if(!this.active) return;
+        if(!this.active) return;//体力があるかどうか？？
 
         const isRightDown=this.cursors.right.isDown;
         const isLeftDown=this.cursors.left.isDown;

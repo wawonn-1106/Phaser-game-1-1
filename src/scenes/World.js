@@ -1,8 +1,8 @@
-import Player from './Player.js';
-import DialogManager from './DialogManager.js';
-import NPC from './NPC.js';
+import Player from '../entities/Player.js';
+import DialogManager from '../managers/DialogManager.js';
+import NPC from '../entities/NPC.js';
 //import House from './House.js';
-import InventoryManager from './InventoryManager.js';
+import InventoryManager from '../managers/InventoryManager.js';
 
 export default class World extends Phaser.Scene{
     constructor(){
@@ -108,7 +108,7 @@ export default class World extends Phaser.Scene{
                 this.syncMoneyWithServer(this.money);
 
 
-                this.dialogManager.start(ch1Data,this.nearstNPC.startId,this.nearstNPC.npcNameoyaga);
+                this.dialogManager.start(ch1Data,this.nearstNPC.startId,this.nearstNPC.npcName);//npcNameoyaga???
                 this.nearstNPC.showIcon(true);
             }else if(this.dialogManager.isTalking){
                 const currentLine=this.dialogManager.currentSequence[this.dialogManager.currentIndex];
@@ -128,6 +128,9 @@ export default class World extends Phaser.Scene{
             {id:'wheat',name:'小麦',realQuality:1,count:5},
             {id:'stone',name:'石',realQuality:1,count:3},
             {id:'apple',name:'りんご',realQuality:1,count:12},
+            {id:'egg',name:'卵',realQuality:2,count:5},
+            {id:'banana',name:'バナナ',realQuality:3,count:5},
+            {id:'pumpkin',name:'かぼちゃ',realQuality:2,count:1},
         ];
 
 

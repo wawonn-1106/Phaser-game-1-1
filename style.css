@@ -39,8 +39,17 @@
 }
 #inventory{
     position: absolute;
+    top: 50px;
+    right: 50px;
     border: 2px solid black;
-    width: 800px;
-    height: 800px;
-    margin: auto;
+    width: 300px;
+    padding: 15px;
+    z-index: 200;
+    background-color: black;
+    color: white;
+}
+#inventory-item{
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }

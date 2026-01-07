@@ -11,6 +11,7 @@ export default class NPC extends Phaser.Physics.Arcade.Sprite{
         this.setScale(0.1).refreshBody();
         this.setCollideWorldBounds(true);
         this.setImmovable(true);
+        this.setPushable(false);
 
         this.moveTimer=0;
         this.currentDir=new Phaser.Math.Vector2(0,0);
