@@ -37,6 +37,7 @@
     color: white;
     font-size: 24px;
 }
+/*
 #inventory{
     position: absolute;
     top: 50px;
@@ -50,6 +51,20 @@
 }
 #inventory-item{
     list-style: none;
+    padding: 0;
+    margin: 0;
+}
+*/
+#menu-window{
+    position: absolute;
+    border: 2px solid black;
+    width: 500px;
+    height: 800px;
+    padding: 15px;
+    z-index: 200;
+    background-color: antiquewhite;
+}
+#menu-content{
     padding: 0;
     margin: 0;
 }

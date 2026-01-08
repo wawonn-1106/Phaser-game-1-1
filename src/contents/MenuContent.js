@@ -1,6 +1,7 @@
-export default class ReviewContent{
-    constructor(scene){
-        this.scene=this.scene;
+export default class MenuContent{
+    constructor(scene,menuManager){
+        this.scene=scene;
+        this.menuManager=menuManager;
     }
     getElement(){
         const container=document.createElement('div');

@@ -3,6 +3,7 @@ import DialogManager from '../managers/DialogManager.js';
 import NPC from '../entities/NPC.js';
 //import House from './House.js';
 import InventoryManager from '../managers/InventoryManager.js';
+import MenuManager from './../managers/MenuManager';
 
 export default class World extends Phaser.Scene{
     constructor(){
@@ -17,7 +18,9 @@ export default class World extends Phaser.Scene{
         this.villagers=null;
         this.nearstNPC=null;
         this.inventoryData=[];
+        this.keys=null;
         this.SERVER_URL='http://localhost:3000';
+        this.menuManager=new MenuManager(this);
     }
     async syncMoneyWithServer(newMoney){
         try{
@@ -121,7 +124,7 @@ export default class World extends Phaser.Scene{
             }
         });
     //-------------------------------------------------------------インベントリ--------------------------------------------------------------------------
-        this.inventoryManager=new InventoryManager();
+        /*this.inventoryManager=new InventoryManager();
 
         this.inventoryData=[
             //最終的にはjsonで管理するが、とりあえずインベントリを表示させるためここで
@@ -144,7 +147,7 @@ export default class World extends Phaser.Scene{
             }else{
                 this.inventoryManager.closeInventory();
             }
-        });
+        });*/
 
 
 
@@ -191,6 +194,26 @@ export default class World extends Phaser.Scene{
         }else{
             this.readyTalking=false;
             this.nearstNPC=null;
+        }
+        //メニューを開くキーのショートカット
+        //this.menuManager=new MenuManager();重くなる原因constructorでやろう
+        if(Phaser.Input.Keyboard.JustDown(this.keys.M)){
+            this.menuManager.toggle('menu');
+        }
+        if(Phaser.Input.Keyboard.JustDown(this.keys.I)){
+            this.menuManager.toggle('inventory');
+        }
+        if(Phaser.Input.Keyboard.JustDown(this.keys.P)){
+            this.menuManager.toggle('profile');
+        }
+        if(Phaser.Input.Keyboard.JustDown(this.keys.A)){
+            this.menuManager.toggle('review');
+        }
+        if(Phaser.Input.Keyboard.JustDown(this.keys.R)){
+            this.menuManager.toggle('ranking');
+        }
+        if(Phaser.Input.Keyboard.JustDown(this.keys.S)){
+            this.menuManager.toggle('settings');
         }
     }
 }
