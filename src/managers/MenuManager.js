@@ -56,7 +56,7 @@ export default class MenuManager{
         }
         const content=this.contents[tabId];//★contents['menu']=contents.menuは同じ
         if(content){
-            const element=content.createElement();
+            const element=content.createElement();//ここでcontainerを受け取る
 
             this.contentArea.appendChild(element);
         }

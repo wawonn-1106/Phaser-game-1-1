@@ -18,7 +18,6 @@ export default class MenuContent{
         menuItem.forEach(item=>{
             const btn=document.createElement('div');
             btn.classList.add('menu-btn');
-            btn.textContent=item.label;
 
             const iconDiv=document.createElement('div');
             iconDiv.classList.add('menu-btn-icon');
@@ -26,7 +25,7 @@ export default class MenuContent{
 
             const labelDiv=document.createElement('div');
             iconDiv.classList.add('menu-btn-label');
-            labelDiv.textContent=item.icon;
+            labelDiv.textContent=item.label;
 
             btn.appendChild(iconDiv);
             btn.appendChild(labelDiv);//btnの中に入れる。containerじゃない

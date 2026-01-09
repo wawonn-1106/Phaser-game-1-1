@@ -68,3 +68,7 @@
     padding: 0;
     margin: 0;
 }
+.menu-btn{
+    cursor: pointer;
+}
+/*classList.addはhtmlにclass追加しなくても自動で加えてくれる*/

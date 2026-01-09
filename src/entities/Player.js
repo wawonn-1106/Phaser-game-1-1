@@ -27,6 +27,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
             this.setVelocity(0);
             return;
         }
+        if(this.scene.menuManager.isOpenMenu){
+            this.setVelocity(0);
+            return;
+        }
         /*if(this.scene.inventoryManager.isOpenInv){
             this.setVelocity(0);
             return;

@@ -3,7 +3,7 @@
 
 ##使用言語
 Phaser
-JavaScript(TypeScriptに移行予定もあり)
+JavaScript(TypeScriptに移行予定あり)
 Node.js
 AWS(予定)
 
