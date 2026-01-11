@@ -5,6 +5,7 @@ import NPC from '../entities/NPC.js';
 //import InventoryManager from '../managers/InventoryManager.js';
 import MenuManager from '../managers/MenuManager.js';
 import InventoryManager from '../managers/InventoryManager.js';
+import ProfileManager from '../managers/ProfileManager.js';
 
 export default class World extends Phaser.Scene{
     constructor(){
@@ -23,6 +24,7 @@ export default class World extends Phaser.Scene{
         this.SERVER_URL='http://localhost:3000';
 
         this.menuManager=new MenuManager(this);//Worldのscene持ってればこれにもアクセスできる
+        this.profileManager=new ProfileManager(this); 
     }
     async syncMoneyWithServer(newMoney){
         try{
