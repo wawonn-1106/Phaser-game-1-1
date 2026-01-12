@@ -17,7 +17,7 @@ export default class MenuManager{
         //インスタンスは作っておく
         this.contents={
             'menu':new MenuContent(scene,this),//thisはMenuManager自身、MenuContentは仲介をするので、アクセスできるようにしておく
-            'inventory':new InventoryContent(scene),
+            'inventory':new InventoryContent(scene),//scene渡さなくてもよさそうだけど
             'profile':new ProfileContent(scene),
             'review':new ReviewContent(scene),
             'ranking':new RankingContent(scene),
