@@ -1,10 +1,11 @@
 import World from './scenes/World.js';
 import House from './scenes/House.js';
+import Title from './scenes/Title.js';
 
 export const config={
     type:Phaser.AUTO,
-    width:840,
-    height:588,
+    width:1280,
+    height:720,
     physics:{
         default:'arcade',
         arcade:{
@@ -23,5 +24,5 @@ export const config={
     zoom:1,
     backgroundColor:'#000000',
     pixelArt:true,
-    scene:[World,House]
+    scene:[Title,World,House]//sceneの順番は表示する順番でもあるからtitleが先
 }

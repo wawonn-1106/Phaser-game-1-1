@@ -1,17 +1,24 @@
-export default class Title{
+export default class Title extends Phaser.Scene{
     constructor(){
         super({key:'Title'});
     }
+    preload(){
+        this.load.image('title','assets/images/title-image.png');
+    }
     create(){
-        this.add.image(400,300,'')//背景画像を決めておく
+        const titleScreen=document.getElementById('title-screen');
 
-        const startBtn=document.getElementBtId('start-button');
+        this.add.image(640,360,'title')//背景画像を決めておく
+
+        const startBtn=document.getElementById('start-button');
         startBtn.classList.remove('hidden');
 
         startBtn.onclick=()=>{
-            startBtn.classList.add('hidden');
+            this.cameras.main.fadeOut(1000,0,0,0);
 
-            this.camera.main.once('camerafadeoutcomplete',()=>{
+            this.cameras.main.once('camerafadeoutcomplete',()=>{
+                titleScreen.classList.add('hidden');
+
                 this.scene.start('World');
             });
         };
