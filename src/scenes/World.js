@@ -54,7 +54,18 @@ export default class World extends Phaser.Scene{
         this.load.image('returnTitle','assets/images/returnTitle.png');
         this.load.image('inventory','assets/images/inventory.png');
         this.load.image('dictionary','assets/images/dictionary.png');
-
+        this.load.spritesheet('player-walk-down','assets/images/Walk Down.png',
+            {frameWidth:13,frameHeight:17,margin:4,spacing:26}
+        );
+        this.load.spritesheet('player-walk-up','assets/images/Walk Up.png',
+            {frameWidth:13,frameHeight:17,margin:4,spacing:26}
+        );
+        this.load.spritesheet('player-walk-right','assets/images/Walk Right.png',
+            {frameWidth:13,frameHeight:17,margin:4,spacing:26}
+        );
+        this.load.spritesheet('player-walk-left','assets/images/Walk Left.png',
+            {frameWidth:13,frameHeight:17,margin:4,spacing:26}
+        );
     }
     async loadPlayerData() {
         try {
@@ -95,7 +106,40 @@ export default class World extends Phaser.Scene{
         this.cursors=this.input.keyboard.createCursorKeys();
         this.keys=this.input.keyboard.addKeys('M,I,P,A,R,S');
     //----------------------------------------------------------プレイヤー------------------------------------------------------------------------------
-        this.player=new Player(this,100,300,'player');
+        this.player=new Player(this,100,300,'player-walk-down',0);
+    
+    //----------------------------------------------------------アニメーション------------------------------------------------------------------------------
+        this.anims.create({
+            key:'walking-down',
+            frames:this.anims.generateFrameNumbers('player-walk-down',{start:0,end:12}),
+            frameRate:12,
+            repeat:-1
+        });
+        this.anims.create({
+            key:'walking-up',
+            frames:this.anims.generateFrameNumbers('player-walk-up',{start:0,end:11}),
+            frameRate:12,
+            repeat:-1
+        });
+        this.anims.create({
+            key:'walking-right',
+            frames:this.anims.generateFrameNumbers('player-walk-right',{start:0,end:11}),
+            frameRate:12,
+            repeat:-1
+        });
+        this.anims.create({
+            key:'walking-left',
+            frames:this.anims.generateFrameNumbers('player-walk-left',{start:0,end:11}),
+            frameRate:12,
+            repeat:-1
+        });
+        this.anims.create({
+            key:'idle',
+            frames:[{key:'player-walk-down',frame:0}],
+            frameRate:20,
+            //repeat:0の省略(-1は無限、0は１回)
+        });
+
     //--------------------------------------------------------NPC-------------------------------------------------------------
         //this.elder=new NPC(this,800,300,'player');
         this.villagers=this.physics.add.group();
