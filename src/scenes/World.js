@@ -6,6 +6,7 @@ import NPC from '../entities/NPC.js';
 import MenuManager from '../managers/MenuManager.js';
 import InventoryManager from '../managers/InventoryManager.js';
 import ProfileManager from '../managers/ProfileManager.js';
+import DictionaryManager from '../managers/DictionaryManager.js';
 
 export default class World extends Phaser.Scene{
     constructor(){
@@ -24,6 +25,7 @@ export default class World extends Phaser.Scene{
         this.SERVER_URL='http://localhost:3000';
 
         this.menuManager=new MenuManager(this);//Worldのscene持ってればこれにもアクセスできる
+        this.dictionaryManager=new DictionaryManager(this);
         this.profileManager=new ProfileManager(this); 
     }
     async syncMoneyWithServer(newMoney){
@@ -44,7 +46,10 @@ export default class World extends Phaser.Scene{
         //this.load.image('tileset-test1','assets/tilesets/Beginning Fields.png')
         //this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test1.tmj');
         this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test.tmj');
+
         this.load.json('chapter1','assets/data/dialog1.json');
+        this.load.json('termsData','assets/data/dictionary.json');
+
         this.load.image('tileset','assets/tilesets/pipo-map001.png');
 
         this.load.image('review','assets/images/review.png');
@@ -55,16 +60,16 @@ export default class World extends Phaser.Scene{
         this.load.image('inventory','assets/images/inventory.png');
         this.load.image('dictionary','assets/images/dictionary.png');
         this.load.spritesheet('player-walk-down','assets/images/Walk Down.png',
-            {frameWidth:13,frameHeight:17,margin:4,spacing:26}
+            {frameWidth:13,frameHeight:17,margin:4,spacing:30}
         );
         this.load.spritesheet('player-walk-up','assets/images/Walk Up.png',
-            {frameWidth:13,frameHeight:17,margin:4,spacing:26}
+            {frameWidth:13,frameHeight:17,margin:4,spacing:30}
         );
         this.load.spritesheet('player-walk-right','assets/images/Walk Right.png',
-            {frameWidth:13,frameHeight:17,margin:4,spacing:26}
+            {frameWidth:13,frameHeight:17,margin:4,spacing:30}
         );
         this.load.spritesheet('player-walk-left','assets/images/Walk Left.png',
-            {frameWidth:13,frameHeight:17,margin:4,spacing:26}
+            {frameWidth:13,frameHeight:17,margin:4,spacing:30}
         );
     }
     async loadPlayerData() {
@@ -104,7 +109,7 @@ export default class World extends Phaser.Scene{
 
     //----------------------------------------------------------キー------------------------------------------------------------------------------
         this.cursors=this.input.keyboard.createCursorKeys();
-        this.keys=this.input.keyboard.addKeys('M,I,P,A,R,S');
+        this.keys=this.input.keyboard.addKeys('M,I,P,A,R,S,D');
     //----------------------------------------------------------プレイヤー------------------------------------------------------------------------------
         this.player=new Player(this,100,300,'player-walk-down',0);
     
@@ -257,7 +262,7 @@ export default class World extends Phaser.Scene{
             this.nearstNPC=null;
         }
         //メニューを開くキーのショートカット
-        //this.menuManager=new MenuManager();重くなる原因constructorでやろう
+        //this.menuManager=new MenuManager();←重くなる原因constructorでやろう
         if(Phaser.Input.Keyboard.JustDown(this.keys.M)){
             this.menuManager.toggle('menu');
         }
@@ -275,6 +280,9 @@ export default class World extends Phaser.Scene{
         }
         if(Phaser.Input.Keyboard.JustDown(this.keys.S)){
             this.menuManager.toggle('settings');
+        }
+        if(Phaser.Input.Keyboard.JustDown(this.keys.D)){
+            this.menuManager.toggle('dictionary');
         }
     }
 }
