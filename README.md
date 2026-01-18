@@ -1,4 +1,4 @@
-まだまだ未完成ですが、遅くとも2027までには完成させる予定です。
+まだまだ未完成です。
 
 
 #economyRPG
@@ -12,7 +12,7 @@ AWS(予定)
 
 #その他詳細は随時追加予定
 
-It’s still very much a work in progress, but I’m planning to have it completed by 2027 at the latest.
+It’s still very much a work in progress.
 
 #EconomyRPG An RPG where you learn economics through the management of your own shop.
 
