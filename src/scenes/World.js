@@ -27,6 +27,7 @@ export default class World extends Phaser.Scene{
         this.menuManager=new MenuManager(this);//Worldのscene持ってればこれにもアクセスできる
         this.dictionaryManager=new DictionaryManager(this);
         this.profileManager=new ProfileManager(this); 
+        this.dialogManager=new DialogManager(this);
     }
     async syncMoneyWithServer(newMoney){
         try{
@@ -164,10 +165,7 @@ export default class World extends Phaser.Scene{
         this.physics.add.collider(this.player,this.worldLayer);
         this.physics.add.collider(this.villagers,this.worldLayer);
         this.physics.add.collider(this.player,this.villagers);
-    //-------------------------------------------------------------ログ--------------------------------------------------------------------------
-        this.dialogManager=new DialogManager();
-
-        const ch1Data=this.cache.json.get('chapter1');
+    //-------------------------------------------------------------ログ--------------------------------------------------------------------------  
 
         this.readyTalking=false;
 
@@ -179,7 +177,8 @@ export default class World extends Phaser.Scene{
                 this.syncMoneyWithServer(this.money);
 
 
-                this.dialogManager.start(ch1Data,this.nearstNPC.startId,this.nearstNPC.npcName);//npcNameoyaga???
+                this.dialogManager.start('chapter1',this.nearstNPC.startId,this.nearstNPC.npcName);//npcNameoyaga???
+                //この第一引数のchapter1(独占市場)は変える予定あり、chapter2(寡占市場),chapter3(完全競争市場)
                 this.nearstNPC.showIcon(true);
             }else if(this.dialogManager.isTalking){
                 const currentLine=this.dialogManager.currentSequence[this.dialogManager.currentIndex];

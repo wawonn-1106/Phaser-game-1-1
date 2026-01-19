@@ -1,5 +1,6 @@
 export default class DialogManager {
-    constructor() {
+    constructor(scene) {
+        this.scene=scene;
         this.currentSequence = [];
         this.currentIndex = 0;
         this.isTalking = false;
@@ -18,9 +19,12 @@ export default class DialogManager {
         }
     }
 //textContentはinnerTextの上位互換
-    start(dialogArray,startId=null,speakerName=null) {
+    start(dataKey,startId=null,speakerName=null) {
         //null
-        this.currentSequence = dialogArray;
+        //dataKeyはch1Dataだけ読み込むならいらない 、が隠しイベントを追加する予定もあるから、置いておく。
+
+        const data=this.scene.cache.json.get(dataKey);
+        this.currentSequence = data;
         this.activeSpeakerName=speakerName;
         
         if(startId){
