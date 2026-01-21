@@ -54,4 +54,7 @@ export default class ProfileContent{
         return container;
 
     }
+    drawRadarChart(){
+        
+    }
 }
