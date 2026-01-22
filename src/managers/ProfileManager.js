@@ -19,19 +19,19 @@ export default class ProfileManager{
     saveProfile(){
 
     }
-    getPoints(centerX,centerY,radius,stats=null){//profileContentで呼ばれる
+    /*getPoints(centerX,centerY,radius,stats=null){//profileContentで呼ばれる
         //五角形のグラフで個体値を表す
         return this.statList.map((s,i)=>{
             const angle=(Math.PI*2/5)*i-(Math.PI/2);
             //Math.PI*2/5＝360を５分割で72度、-(Math.PI/2)でちょうど時計の12時のとこから描き始める
 
-            const val=stats[s.id];
+            const val=stats ? stats[s.id] : 25;
             const r=(val/25)*radius;//中心からの距離を計算する(目盛り)
 
             return{x:centerX+r*Math.cos(angle),y:centerY+r*Math.sin(angle)};//cosはx,sinはy
         });
-    }
-    initTutorialProfile(name){//チュートリアル用の関数(個体値の抽選は最初だけ)
+    }*/
+    /*initTutorialProfile(name){//チュートリアル用の関数(個体値の抽選は最初だけ)
         const player=this.scene.player;
         player.name=name;
 
@@ -50,7 +50,7 @@ export default class ProfileManager{
 
             player.stats[Phaser.Utils.Array.GetRandom(this.statList).id]=25;//Phaser.Utils.Array.GetRandom配列からランダムに一つ選ぶ
         }
-    }
+    }*/
 }
 /*今はWorldのデータをProfileContentでもらって編集の時はProfileManager通してるけど、
 json管理の時はProfileManagerでデータをもらう感じにする*/

@@ -7,6 +7,7 @@ import MenuManager from '../managers/MenuManager.js';
 import InventoryManager from '../managers/InventoryManager.js';
 import ProfileManager from '../managers/ProfileManager.js';
 import DictionaryManager from '../managers/DictionaryManager.js';
+import ProfileContent from '../contents/ProfileContent.js';
 
 export default class World extends Phaser.Scene{
     constructor(){
@@ -28,6 +29,7 @@ export default class World extends Phaser.Scene{
         this.dictionaryManager=new DictionaryManager(this);
         this.profileManager=new ProfileManager(this); 
         this.dialogManager=new DialogManager(this);
+        //this.profileContent=new ProfileContent(this,400,300);
     }
     async syncMoneyWithServer(newMoney){
         try{
@@ -113,6 +115,14 @@ export default class World extends Phaser.Scene{
         this.keys=this.input.keyboard.addKeys('M,I,P,A,R,S,D');
     //----------------------------------------------------------プレイヤー------------------------------------------------------------------------------
         this.player=new Player(this,100,300,'player-walk-down',0);
+
+        /*this.player.name='テスト';
+        this.profileManager.initTutorialProfile(this.player.name);*/
+
+        //this.profileContent.drawRadarChart();
+        
+
+        //this.testProfile = new ProfileContent(this, 400, 300);
     
     //----------------------------------------------------------アニメーション------------------------------------------------------------------------------
         this.anims.create({
