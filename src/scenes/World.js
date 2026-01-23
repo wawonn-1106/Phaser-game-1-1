@@ -25,7 +25,7 @@ export default class World extends Phaser.Scene{
         this.keys=null;
         this.SERVER_URL='http://localhost:3000';
 
-        this.menuManager=new MenuManager(this);//Worldのscene持ってればこれにもアクセスできる
+        
         this.dictionaryManager=new DictionaryManager(this);
         this.profileManager=new ProfileManager(this); 
         this.dialogManager=new DialogManager(this);
@@ -116,8 +116,10 @@ export default class World extends Phaser.Scene{
     //----------------------------------------------------------プレイヤー------------------------------------------------------------------------------
         this.player=new Player(this,100,300,'player-walk-down',0);
 
-        /*this.player.name='テスト';
-        this.profileManager.initTutorialProfile(this.player.name);*/
+        this.menuManager=new MenuManager(this);//Worldのscene持ってればこれにもアクセスできる
+
+        this.player.name='テスト';
+        this.profileManager.initTutorialProfile(this.player.name);
 
         //this.profileContent.drawRadarChart();
         
@@ -236,6 +238,8 @@ export default class World extends Phaser.Scene{
     }
     update(time,delta){
         this.player.update();
+
+        this.menuManager.update();
         
         let minDistance=100;
         let closestNPC=null;

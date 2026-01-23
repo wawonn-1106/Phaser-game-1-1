@@ -19,12 +19,17 @@ export default class MenuManager{
         this.contents={
             'menu':new MenuContent(scene,this),//thisはMenuManager自身、MenuContentは仲介をするので、アクセスできるようにしておく
             'inventory':new InventoryContent(scene),//scene渡さなくてもよさそうだけど
-            'profile':new ProfileContent(scene),
+            'profile':new ProfileContent(scene,0,0),
             'review':new ReviewContent(scene),
             'ranking':new RankingContent(scene),
             'settings':new SettingsContent(scene),
             'dictionary':new DictionaryContent(scene)
         };
+    }
+    update(){
+        if(this.isOpenMenu && this.currentTab==='profile'){
+            this.contents['profile'].updatePosition();
+        }
     }
     toggle(tabId='menu'){
         if(!this.isOpenMenu){
@@ -45,6 +50,11 @@ export default class MenuManager{
     closeMenu(){
         this.isOpenMenu=false;
         this.window.classList.add('hidden');
+
+        const currentContent=this.contents[this.currentTab];
+        if(currentContent && currentContent.setVisible){//Phaserのグラフがあったら消す
+            currentContent.setVisible(false);
+        }
     }
     switchTab(tabId){
         this.currentTab=tabId;
@@ -71,6 +81,8 @@ export default class MenuManager{
             const element=content.createElement();//ここでcontainerを受け取る
 
             this.contentArea.appendChild(element);
+
+            if(content.setVisible) content.setVisible(true);//Phaserのグラフがあるなら表示させる
         }
 
 

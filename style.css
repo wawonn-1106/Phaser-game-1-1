@@ -131,3 +131,13 @@ idで場所を指定して、addで同じ名前のクラスを作ってそこで
     transform: translate(-50%,-50%);
     この書き方、真ん中に寄せる*/
 }
+#profile-container{
+    /*background: transparent;*/
+}
+#radar-chart-conatiner{
+    width: 200px;
+    height: 200px;
+    z-index: 500;
+    background: transparent;
+    border: 2px solid white;
+}
