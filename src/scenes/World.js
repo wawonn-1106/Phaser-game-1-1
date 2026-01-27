@@ -34,7 +34,7 @@ export default class World extends Phaser.Scene{
         this.dialogManager=new DialogManager(this);
         //this.profileContent=new ProfileContent(this,400,300);
     }
-    async syncMoneyWithServer(newMoney){
+    /*async syncMoneyWithServer(newMoney){
         try{
             const response=await fetch(`${this.SERVER_URL}/save`,{
                 method:'POST',
@@ -46,12 +46,14 @@ export default class World extends Phaser.Scene{
         }catch(error){
             console.error('通信エラー：',error);
         }
-    }
+    }*/
     preload(){
         this.load.image('player','assets/images/player.png');
         //this.load.image('tileset-test1','assets/tilesets/Beginning Fields.png')
         //this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test1.tmj');
         this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test.tmj');
+        this.load.image('rain','assets/images/player.png');
+        this.load.image('snow','assets/images/player.png');
 
         this.load.json('chapter1','assets/data/dialog1.json');
         this.load.json('termsData','assets/data/dictionary.json');
@@ -65,6 +67,7 @@ export default class World extends Phaser.Scene{
         this.load.image('returnTitle','assets/images/returnTitle.png');
         this.load.image('inventory','assets/images/inventory.png');
         this.load.image('dictionary','assets/images/dictionary.png');
+        this.load.image('guide','assets/images/guide.png');
         this.load.spritesheet('player-walk-down','assets/images/Walk Down.png',
             {frameWidth:13,frameHeight:17,margin:4,spacing:30}
         );
@@ -78,7 +81,7 @@ export default class World extends Phaser.Scene{
             {frameWidth:13,frameHeight:17,margin:4,spacing:30}
         );
     }
-    async loadPlayerData() {
+    /*async loadPlayerData() {
         try {
             const response = await fetch(`${this.SERVER_URL}/load`);
             const data = await response.json();
@@ -92,7 +95,7 @@ export default class World extends Phaser.Scene{
         } catch (error) {
             console.log('読み込み失敗、0円から開始します', error);
         }
-    }
+    }*/
     async fetchWeather(){//Rain,Snowを取得。
         const API_KEY=process.env.WEATHER_API_KEY;
         const lat=34.40;
@@ -134,9 +137,16 @@ export default class World extends Phaser.Scene{
             scrollFactor:0
         });
     }
-    async create(){
+    createClouds(){
+        const overlay=this.add.rectangle(0,0,1280,720,0x333344,0.4);//画面全体を曇らせる
+
+        overlay.setOrigin(0,0);
+        overlay.setScrollFactor(0);
+        overlay.setDepth(2000);
+    }
+    create(){
         //this.loadPlayerData();
-        await this.fetchWeather();
+        //await this.fetchWeather();
         /*async create(){}  await this.fetchWeather();を追加する*/
     //-------------------------------------------------------マップ---------------------------------------------------------------------------------
     
@@ -160,7 +170,24 @@ export default class World extends Phaser.Scene{
             this.createRain();
         }else if(this.currentWeather==='Snow'){
             this.createSnow();
+        }else if(this.currentWeather==='Clouds'){
+            this.createClouds();
         }//どちらでもないなら晴れ
+
+    //----------------------------------------------------------操作説明ボタン------------------------------------------------------------------------------
+
+        const guideButton=this.add.image(1230,670,'guide')
+                .setOrigin(0.5)
+                .setInteractive({unHandCursor:true})
+                .setScrollFactor(0)
+                .setDepth(3000);
+        
+        guideButton.on('pointerover',()=>guideButton.setScale(1.1));
+        guideButton.on('pointerput',()=>guideButton.setScale(1.0));
+
+        guideButton.on('pointerdown',()=>{
+            this.menuManager.toggle('guide');
+        });
 
     //----------------------------------------------------------キー------------------------------------------------------------------------------
         this.cursors=this.input.keyboard.createCursorKeys();

@@ -5,6 +5,7 @@ import InventoryContent from '../contents/InventoryContent.js';
 import RankingContent from '../contents/RankingContent.js';
 import ReviewContent from '../contents/ReviewContent.js';
 import DictionaryContent from '../contents/DictionaryContent.js';
+import GuideContent from '../contents/GuideContent.js';
 
 export default class MenuManager{
     constructor(scene){
@@ -23,7 +24,8 @@ export default class MenuManager{
             'review':new ReviewContent(scene),
             'ranking':new RankingContent(scene),
             'settings':new SettingsContent(scene),
-            'dictionary':new DictionaryContent(scene)
+            'dictionary':new DictionaryContent(scene),
+            'guide':new GuideContent(scene)
         };
     }
     /*update(){
