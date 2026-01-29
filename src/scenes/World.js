@@ -335,6 +335,8 @@ export default class World extends Phaser.Scene{
        
         this.cameras.main.startFollow(this.player,true,0.1,0.1);
         this.cameras.main.setBounds(0,0,1600,1600);
+        
+        
     }
     update(time,delta){
         this.player.update();

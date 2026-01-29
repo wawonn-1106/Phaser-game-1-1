@@ -566,7 +566,24 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"Serene_Village_48x48.tsj"
+         "source":"../tilesets/Serene_Village_48x48.tsj"
+        }, 
+        {
+         "columns":19,
+         "firstgid":1,
+         "image":"../tilesets/Serene_Village_48x48.png",
+         "imageheight":2160,
+         "imagewidth":912,
+         "margin":0,
+         "name":"Serene_Village_48x48",
+         "spacing":0,
+         "tilecount":855,
+         "tileheight":48,
+         "tilewidth":48
+        }, 
+        {
+         "firstgid":1711,
+         "source":"../tilesets/Serene_Village_48x48.tsj"
         }],
  "tilewidth":48,
  "type":"map",
