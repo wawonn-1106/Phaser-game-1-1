@@ -51,14 +51,16 @@ export default class World extends Phaser.Scene{
         this.load.image('player','assets/images/player.png');
         //this.load.image('tileset-test1','assets/tilesets/Beginning Fields.png')
         //this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test1.tmj');
-        this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test.tmj');
+        //this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test.tmj');
+        this.load.tilemapTiledJSON('map','assets/tilemaps/economyRPG.tmj');
         this.load.image('rain','assets/images/player.png');
         this.load.image('snow','assets/images/player.png');
 
         this.load.json('chapter1','assets/data/dialog1.json');
         this.load.json('termsData','assets/data/dictionary.json');
 
-        this.load.image('tileset','assets/tilesets/pipo-map001.png');
+        //this.load.image('tileset','assets/tilesets/pipo-map001.png');
+        this.load.image('tileset','assets/tilesets/Serene_Village_48x48.png');
 
         this.load.image('review','assets/images/review.png');
         this.load.image('settings','assets/images/settings.png');
@@ -154,12 +156,26 @@ export default class World extends Phaser.Scene{
     
         const map = this.make.tilemap({ key: 'map' });
     
-        const tileset = map.addTilesetImage('pipo-map001','tileset');
+        //const tileset = map.addTilesetImage('pipo-map001','tileset');
+        const tileset = map.addTilesetImage('Serene_Village_48x48','tileset');
         
-        this.backgroundLayer = map.createLayer('ground', tileset, 0, 0);
+        /*this.backgroundLayer = map.createLayer('ground', tileset, 0, 0);
 
         this.worldLayer = map.createLayer('object', tileset, 0, 0);
         this.worldLayer.setCollisionByProperty({ collides: true });
+        this.physics.world.setBounds(0,0,1600,1600);*/
+
+        this.backgroundLayer = map.createLayer('Ground', tileset, 0, 0);
+
+        this.OnGroundLayer = map.createLayer('OnGround', tileset, 0, 0);
+        this.HouseLayer = map.createLayer('House', tileset, 0, 0);
+        this.SmallDecorationLayer = map.createLayer('SmallDecoration', tileset, 0, 0);
+        this.DecorationLayer = map.createLayer('Decoration', tileset, 0, 0);
+
+        this.OnGroundLayer.setCollisionByProperty({ collides: true });
+        this.HouseLayer.setCollisionByProperty({ collides: true });
+        this.SmallDecorationLayer.setCollisionByProperty({ collides: true });
+        this.DecorationLayer.setCollisionByProperty({ collides: true });
         this.physics.world.setBounds(0,0,1600,1600);
 
         this.moneyText=this.add.text(100,100,`所持金：${this.money}`,{
@@ -254,8 +270,12 @@ export default class World extends Phaser.Scene{
             this.villagers.add(newVillager);
         });
     //----------------------------------------------------------当たり判定-----------------------------------------------------------------------
-        this.physics.add.collider(this.player,this.worldLayer);
+        /*this.physics.add.collider(this.player,this.worldLayer);
         this.physics.add.collider(this.villagers,this.worldLayer);
+        this.physics.add.collider(this.player,this.villagers);*/
+
+        this.physics.add.collider(this.player,this.OnGroundLayer);
+        this.physics.add.collider(this.villagers,this.OnGroundLayer);
         this.physics.add.collider(this.player,this.villagers);
     //-------------------------------------------------------------ログ--------------------------------------------------------------------------  
 
