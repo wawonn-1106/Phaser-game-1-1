@@ -3,9 +3,22 @@ export default class MenuContent{
         this.scene=scene;
         this.menuManager=menuManager;
     }
-    createElement(){
-        const container=document.createElement('div');
-        container.classList.add('menu-content');
+    createView(){
+        const container=this.scene.add.container(0,0);
+        //container.classList.add('menu-content');
+        const bg=this.scene.add.image(0,0,'menu-bg');
+        bg.setDisplaySize(1000,600);
+        /*const bg=this.scene.add.graphics();
+
+        bg.fillStyle(0x000000,0.8);
+        bg.lineStyle(6,0xffffff,1);
+
+        const width=1000;
+        const height=600;
+
+        bg.fillRoundedRect(-width/2,-height/2,width,height,20);
+        bg.strokeRoundedRect(-width/2,-height/2,width,height,20);*/
+        container.add(bg);
 
         const menuItem=[
             {id:'inventory',label:'持ち物',icon:'inventory'},
@@ -17,37 +30,29 @@ export default class MenuContent{
             {id:'returnTitle',label:'タイトルに戻る',icon:'returnTitle'}
         ];
 
-        menuItem.forEach(item=>{
-            const btn=document.createElement('div');
-            btn.classList.add('menu-btn');
+        const columns=4;
+        const spacingX=220;
+        const spacingY=200;
 
-            const iconDiv=document.createElement('img');
-            iconDiv.classList.add('menu-btn-icon');
-            iconDiv.src=`assets/images/${item.icon}.png`;
+        menuItem.forEach((item,index)=>{
+            const col=index%columns;
+            const row=Math.floor(index/columns);
 
-            const labelDiv=document.createElement('div');
-            labelDiv.classList.add('menu-btn-label');
-            labelDiv.textContent=item.label;
+            const x=-330+(col*spacingX);
+            const y=-100+(row*spacingY);
 
-            btn.appendChild(iconDiv);
-            btn.appendChild(labelDiv);//btnの中に入れる。containerじゃない
+            const icon=this.scene.add.image(x,y,item.icon).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
-            btn.onclick=()=>{
-                /*if(item.id==='returnTitle'){
-                    this.scene.cameras.main.fadeOut(1000,0,0,0);
-
-                    this.scene.cameras.main.once('camerafadeoutcomplete',()=>{
-                        const window=document.getElementById('menu-window');
-                        if(window) this.window.classList.add('hidden');
-
-                        this.scene.start('Title');
-                    });
-                }*/
+            icon.on('pointerdown',()=>{
                 this.menuManager.switchTab(item.id);
-                // /*このsceneはWorldのだからダメなのか、そもそもタイトル画面の遷移はManager経由でするべきなのか*/
-            };
+            });
 
-            container.appendChild(btn);
+            const label=this.scene.add.text(x,y+80,item.label,{
+                fontSize:'20px',
+                fill:'#ffffff'
+            }).setOrigin(0.5);
+
+            container.add([icon,label]);
         });
 
         return container;

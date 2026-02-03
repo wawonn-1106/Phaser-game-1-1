@@ -71,6 +71,7 @@ export default class World extends Phaser.Scene{
         //this.load.image('tileset','assets/tilesets/pipo-map001.png');
         this.load.image('tileset','assets/tilesets/Serene_Village_48x48.png');
 
+        this.load.image('menu-bg','assets/images/menu-bg.png');
         this.load.image('review','assets/images/review.png');
         this.load.image('settings','assets/images/settings.png');
         this.load.image('ranking','assets/images/ranking.png');
@@ -158,8 +159,8 @@ export default class World extends Phaser.Scene{
         this.backgroundLayer = map.createLayer('Ground', tileset, 0, 0);
         this.OnGroundLayer = map.createLayer('OnGround', tileset, 0, 0);
         this.HouseLayer = map.createLayer('House', tileset, 0, 0);
-        this.OnDecorationLayer = map.createLayer('OnDecoration', tileset, 0, 0);
-        this.DecorationLayer = map.createLayer('Decoration', tileset, 0, 0);
+        //this.OnDecorationLayer = map.createLayer('OnDecoration', tileset, 0, 0);
+        //this.DecorationLayer = map.createLayer('Decoration', tileset, 0, 0);
 
         //this.OnGroundLayer.setCollisionByProperty({ collides: true });
         //this.HouseLayer.setCollisionByProperty({ collides: true });
@@ -168,6 +169,7 @@ export default class World extends Phaser.Scene{
         /*this.moneyText=this.add.text(100,100,`所持金：${this.money}`,{
             fontSize:'36px',fill:'black'
         }).setOrigin(0,0).setScrollFactor(0);*/
+        this.scene.launch('UIScene');
     //----------------------------------------------------------天気------------------------------------------------------------------------------
         /*if(this.currentWeather==='Rain'){
             this.createRain();
@@ -190,12 +192,11 @@ export default class World extends Phaser.Scene{
         guideButton.on('pointerout',()=>guideButton.setScale(0.7));
 
         guideButton.on('pointerdown',()=>{
-            this.menuManager.toggle('guide');
+            this.menuManager?.toggle('guide');
         });
 
     //----------------------------------------------------------キー------------------------------------------------------------------------------
         this.cursors=this.input.keyboard.createCursorKeys();
-        this.keys=this.input.keyboard.addKeys('M,I,P,A,R,S,D');
     //----------------------------------------------------------プレイヤー------------------------------------------------------------------------------
         this.player=new Player(this,100,300,'player');
 
@@ -215,7 +216,7 @@ export default class World extends Phaser.Scene{
             }
         }//わかりやすくここに配置。家を出た時、家の前に戻るように
 
-        this.menuManager=new MenuManager(this);//Worldのscene持ってればこれにもアクセスできる
+        //this.menuManager=new MenuManager(this);//Worldのscene持ってればこれにもアクセスできる
 
         this.player.name='テスト';
         this.profileManager.initTutorialProfile(this.player.name);
@@ -437,7 +438,8 @@ export default class World extends Phaser.Scene{
             }
         });
 
-        const isBusy=this.dialogManager.isTalking || (this.menuManager.isOpen);
+        const isMenuOpen=this.menuManager?.isOpenMenu || false;
+        const isBusy=this.dialogManager.isTalking || isMenuOpen;
 
         if(closestItem && !isBusy){
             this.readyActionType=closestItem.type;
@@ -481,28 +483,6 @@ export default class World extends Phaser.Scene{
             this.readyTalking=false;
             this.nearstNPC=null;
         }*/
-        //メニューを開くキーのショートカット
-        //this.menuManager=new MenuManager();←重くなる原因constructorでやろう
-        if(Phaser.Input.Keyboard.JustDown(this.keys.M)){
-            this.menuManager.toggle('menu');
-        }
-        if(Phaser.Input.Keyboard.JustDown(this.keys.I)){
-            this.menuManager.toggle('inventory');
-        }
-        if(Phaser.Input.Keyboard.JustDown(this.keys.P)){
-            this.menuManager.toggle('profile');
-        }
-        if(Phaser.Input.Keyboard.JustDown(this.keys.A)){
-            this.menuManager.toggle('review');
-        }
-        if(Phaser.Input.Keyboard.JustDown(this.keys.R)){
-            this.menuManager.toggle('ranking');
-        }
-        if(Phaser.Input.Keyboard.JustDown(this.keys.S)){
-            this.menuManager.toggle('settings');
-        }
-        if(Phaser.Input.Keyboard.JustDown(this.keys.D)){
-            this.menuManager.toggle('dictionary');
-        }
+        
     }
 }

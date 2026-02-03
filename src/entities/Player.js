@@ -24,7 +24,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
         const isDownDown=this.cursors.down.isDown;
         
         //会話中、インベントリを開いてる間は動けなくする
-        if(this.scene.dialogManager.isTalking){
+        /*if(this.scene.dialogManager.isTalking){
             this.setVelocity(0);
             this.anims.play('idle',true);
             return;
@@ -41,29 +41,29 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
 
         if(isRightDown){
             this.setVelocityX(this.speed);
-            this.anims.play('walking-right',true);
+            //this.anims.play('walking-right',true);
             moving=true;
         }
         else if(isLeftDown){
             this.setVelocityX(-this.speed);
-            this.anims.play('walking-left',true);
+            //this.anims.play('walking-left',true);
             moving=true;
         }
 
         if(isUpDown){
             this.setVelocityY(-this.speed);
-            this.anims.play('walking-up',true);
+            //this.anims.play('walking-up',true);
             moving=true;
         }
         else if(isDownDown){
             this.setVelocityY(this.speed);
-            this.anims.play('walking-down',true);
+            //this.anims.play('walking-down',true);
             moving=true;
         }
 
         if(!moving){
             this.setVelocity(0);
-            this.anims.play('idle',true);
+            //this.anims.play('idle',true);
         }
         
         if (this.body.velocity.x !== 0 && this.body.velocity.y !== 0) {
