@@ -2,7 +2,6 @@ import Player from '../entities/Player.js';
 import DialogManager from '../managers/DialogManager.js';
 import NPC from '../entities/NPC.js';
 //import House from './House.js';
-//import InventoryManager from '../managers/InventoryManager.js';
 import MenuManager from '../managers/MenuManager.js';
 import InventoryManager from '../managers/InventoryManager.js';
 import ProfileManager from '../managers/ProfileManager.js';
@@ -57,7 +56,7 @@ export default class World extends Phaser.Scene{
         //this.load.image('tileset-test1','assets/tilesets/Beginning Fields.png')
         //this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test1.tmj');
         //this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test.tmj');
-        this.load.tilemapTiledJSON('map','assets/tilemaps/economyRPG2.tmj');
+        this.load.tilemapTiledJSON('map','assets/tilemaps/economyRPG.json');
         this.load.image('rain','assets/images/player.png');
         this.load.image('snow','assets/images/player.png');
 
@@ -160,40 +159,30 @@ export default class World extends Phaser.Scene{
     
     
         const map = this.make.tilemap({ key: 'map' });
-    
-        //const tileset = map.addTilesetImage('pipo-map001','tileset');
-        const tileset = map.addTilesetImage('Serene_Village_48x48','tileset');
-        
-        /*this.backgroundLayer = map.createLayer('ground', tileset, 0, 0);
 
-        this.worldLayer = map.createLayer('object', tileset, 0, 0);
-        this.worldLayer.setCollisionByProperty({ collides: true });
-        this.physics.world.setBounds(0,0,1600,1600);*/
+        const tileset = map.addTilesetImage('Serene_Village_48x48','tileset');
 
         this.backgroundLayer = map.createLayer('Ground', tileset, 0, 0);
-
         this.OnGroundLayer = map.createLayer('OnGround', tileset, 0, 0);
         this.HouseLayer = map.createLayer('House', tileset, 0, 0);
-        //this.SmallDecorationLayer = map.createLayer('SmallDecoration', tileset, 0, 0);
+        this.OnDecorationLayer = map.createLayer('OnDecoration', tileset, 0, 0);
         this.DecorationLayer = map.createLayer('Decoration', tileset, 0, 0);
 
-        this.OnGroundLayer.setCollisionByProperty({ collides: true });
-        this.HouseLayer.setCollisionByProperty({ collides: true });
-        //this.SmallDecorationLayer.setCollisionByProperty({ collides: true });
-        //this.DecorationLayer.setCollisionByProperty({ collides: true });
+        //this.OnGroundLayer.setCollisionByProperty({ collides: true });
+        //this.HouseLayer.setCollisionByProperty({ collides: true });
         this.physics.world.setBounds(0,0,map.widthInPixels,map.heightInPixels);
 
-        this.moneyText=this.add.text(100,100,`所持金：${this.money}`,{
+        /*this.moneyText=this.add.text(100,100,`所持金：${this.money}`,{
             fontSize:'36px',fill:'black'
-        }).setOrigin(0,0).setScrollFactor(0);
+        }).setOrigin(0,0).setScrollFactor(0);*/
     //----------------------------------------------------------天気------------------------------------------------------------------------------
-        if(this.currentWeather==='Rain'){
+        /*if(this.currentWeather==='Rain'){
             this.createRain();
         }else if(this.currentWeather==='Snow'){
             this.createSnow();
         }else if(this.currentWeather==='Clouds'){
             this.createClouds();
-        }//どちらでもないなら晴れ
+        }//どちらでもないなら晴れ*/
 
     //----------------------------------------------------------操作説明ボタン------------------------------------------------------------------------------
 
@@ -274,11 +263,7 @@ export default class World extends Phaser.Scene{
             const newVillager=new NPC(this,data.x,data.y,data.key,data);//this忘れ、どこに書けばいいかわからなかったことによるエラー。
             this.villagers.add(newVillager);
         });
-    //----------------------------------------------------------当たり判定-----------------------------------------------------------------------
-        /*this.physics.add.collider(this.player,this.worldLayer);
-        this.physics.add.collider(this.villagers,this.worldLayer);
-        this.physics.add.collider(this.player,this.villagers);*/
-
+    //----------------------------------------------------------当たり判定----------------------------------------------------------------------
         this.physics.add.collider(this.player,this.OnGroundLayer);
         this.physics.add.collider(this.player,this.HouseLayer);
 
