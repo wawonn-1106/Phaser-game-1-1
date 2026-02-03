@@ -5,7 +5,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
         scene.physics.world.enable(this);
         scene.add.existing(this);
 
-        this.setScale(5).refreshBody();
+        this.setScale(0.1).refreshBody();
         this.setCollideWorldBounds(true);
         this.setPushable(false);
 

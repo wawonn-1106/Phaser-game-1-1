@@ -1,6 +1,7 @@
 import World from './scenes/World.js';
 import House from './scenes/House.js';
 import Title from './scenes/Title.js';
+import Shop from './scenes/Shop.js';
 
 export const config={
     type:Phaser.AUTO,
@@ -24,5 +25,5 @@ export const config={
     zoom:1,
     backgroundColor:'#000000',
     pixelArt:true,
-    scene:[Title,World]//sceneの順番は表示する順番でもあるからtitleが先
+    scene:[Title,World,House,Shop]//sceneの順番は表示する順番でもあるからtitleが先
 }

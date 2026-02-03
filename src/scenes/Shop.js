@@ -1,19 +1,19 @@
-export default class House extends Phaser.Scene{
+export default class Shop extends Phaser.Scene{
     constructor(){
-        super({key:'House'});
+        super({key:'Shop'});
         this.isWarping=false;
 
     }
     create(){
-        const map = this.make.tilemap({ key: 'house' });
+        const map = this.make.tilemap({ key: 'shop' });
     
         const tileset = map.addTilesetImage('Serene_Village_48x48','tileset');
         
         this.GroundLayer = map.createLayer('Ground', tileset, 0, 0); 
-        this.HouseLayer = map.createLayer('House', tileset, 0, 0);
+        //this.HouseLayer = map.createLayer('House', tileset, 0, 0);
         this.OnGroundLayer = map.createLayer('OnGround', tileset, 0, 0);
 
-        this.HouseLayer.setCollisionByProperty({ collides: true });
+        //this.HouseLayer.setCollisionByProperty({ collides: true });
         this.OnGroundLayer.setCollisionByProperty({ collides: true });
 
         this.player = this.physics.add.sprite(500, 400, 'player').setScale(0.1);

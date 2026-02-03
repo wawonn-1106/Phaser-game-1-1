@@ -57,6 +57,9 @@ export default class World extends Phaser.Scene{
         //this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test1.tmj');
         //this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test.tmj');
         this.load.tilemapTiledJSON('map','assets/tilemaps/economyRPG.json');
+        this.load.tilemapTiledJSON('house','assets/tilemaps/House.json');
+        this.load.tilemapTiledJSON('shop','assets/tilemaps/Shop.json');
+
         this.load.image('rain','assets/images/player.png');
         this.load.image('snow','assets/images/player.png');
 
@@ -74,18 +77,6 @@ export default class World extends Phaser.Scene{
         this.load.image('inventory','assets/images/inventory.png');
         this.load.image('dictionary','assets/images/dictionary.png');
         this.load.image('guide','assets/images/guide.png');
-        this.load.spritesheet('player-walk-down','assets/images/Walk Down.png',
-            {frameWidth:13,frameHeight:17,margin:4,spacing:30}
-        );
-        this.load.spritesheet('player-walk-up','assets/images/Walk Up.png',
-            {frameWidth:13,frameHeight:17,margin:4,spacing:30}
-        );
-        this.load.spritesheet('player-walk-right','assets/images/Walk Right.png',
-            {frameWidth:13,frameHeight:17,margin:4,spacing:30}
-        );
-        this.load.spritesheet('player-walk-left','assets/images/Walk Left.png',
-            {frameWidth:13,frameHeight:17,margin:4,spacing:30}
-        );
     }
     /*async loadPlayerData() {
         try {
@@ -204,7 +195,7 @@ export default class World extends Phaser.Scene{
         this.cursors=this.input.keyboard.createCursorKeys();
         this.keys=this.input.keyboard.addKeys('M,I,P,A,R,S,D');
     //----------------------------------------------------------プレイヤー------------------------------------------------------------------------------
-        this.player=new Player(this,100,300,'player-walk-down',0);
+        this.player=new Player(this,100,300,'player');
 
         this.menuManager=new MenuManager(this);//Worldのscene持ってればこれにもアクセスできる
 
@@ -217,7 +208,7 @@ export default class World extends Phaser.Scene{
         //this.testProfile = new ProfileContent(this, 400, 300);
     
     //----------------------------------------------------------アニメーション------------------------------------------------------------------------------
-        this.anims.create({
+        /*this.anims.create({
             key:'walking-down',
             frames:this.anims.generateFrameNumbers('player-walk-down',{start:0,end:12}),
             frameRate:12,
@@ -246,7 +237,7 @@ export default class World extends Phaser.Scene{
             frames:[{key:'player-walk-down',frame:0}],
             frameRate:20,
             //repeat:0の省略(-1は無限、0は１回)
-        });
+        });*/
 
     //--------------------------------------------------------NPC-------------------------------------------------------------
         //this.elder=new NPC(this,800,300,'player');
@@ -321,10 +312,26 @@ export default class World extends Phaser.Scene{
                     
                     case 'door':
                         //入る処理
+                        const targetValue=this.actionTarget.data.properties.find(p=>p.name==='target')?.value;
+
+                        this.player.body.enable=false;
+                        this.cameras.main.fadeOut(1000,0,0,0);
+
+                        this.cameras.main.once('camerafadeoutcomplete',()=>{
+                            switch(targetValue){
+                                case 'house':
+                                    this.scene.start('House');
+                                    break;
+                                case 'shop':
+                                    this.scene.start('Shop');
+                                    break;
+                            }
+                        });
                         break;
                     
                     case 'machine':
                         //加工画面を開く
+                        this.menuManager.toggle('machine');
                         break;
                 }
             }                
