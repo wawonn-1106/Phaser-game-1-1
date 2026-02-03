@@ -1,8 +1,11 @@
 export default class Shop extends Phaser.Scene{
     constructor(){
         super({key:'Shop'});
-        this.isWarping=false;
-
+        this.isWraping=false;
+        this.fromDoor=null;
+    }
+    init(data){
+        this.fromDoor=data.fromDoor;
     }
     create(){
         const map = this.make.tilemap({ key: 'shop' });
@@ -33,13 +36,13 @@ export default class Shop extends Phaser.Scene{
                     this.physics.add.existing(exitRegion,true);
 
                     this.physics.add.overlap(this.player,exitRegion,()=>{
-                        if(!this.isWarping){
-                            this.isWarping=true;
+                        if(!this.isWraping){
+                            this.isWraping=true;
                             this.player.body.enable=false;
 
                             this.cameras.main.fadeOut(1000,0,0,0);
                             this.cameras.main.once('camerafadeoutcomplete',()=>{
-                                this.scene.start('World');
+                                this.scene.start('World',{returnTo:this.fromDoor});
                             });
                         }
                     })

@@ -29,6 +29,8 @@ export default class World extends Phaser.Scene{
         this.readyIcon=null;
         this.readyActionType=null;
         this.actionTarget=null;
+        this.fromDoor=null;
+        this.isWraping=false;
 
         //this.SERVER_URL='http://localhost:3000';
 
@@ -141,7 +143,7 @@ export default class World extends Phaser.Scene{
         overlay.setScrollFactor(0);
         overlay.setDepth(2000);
     }*/
-    create(){
+    create(data){
         //this.loadPlayerData();
         //await this.fetchWeather();
         /*async create(){}  await this.fetchWeather();を追加する*/
@@ -196,6 +198,22 @@ export default class World extends Phaser.Scene{
         this.keys=this.input.keyboard.addKeys('M,I,P,A,R,S,D');
     //----------------------------------------------------------プレイヤー------------------------------------------------------------------------------
         this.player=new Player(this,100,300,'player');
+
+        if(data&&data.returnTo){
+            const objectLayer=map.getObjectLayer('Object');
+            
+            const doorObj=objectLayer.objects.find(obj=>{
+                const targetProp=obj.properties?.find(p=>p.name==='target');
+                return targetProp && targetProp.value==data.returnTo;
+            });
+
+            if(doorObj){
+                this.player.setPosition(
+                    doorObj.x+(doorObj.width/2),
+                    doorObj.y+(doorObj.height/2),
+                );
+            }
+        }//わかりやすくここに配置。家を出た時、家の前に戻るように
 
         this.menuManager=new MenuManager(this);//Worldのscene持ってればこれにもアクセスできる
 
@@ -287,7 +305,7 @@ export default class World extends Phaser.Scene{
             {fontSize:'24px'}
         ).setOrigin(0.5).setVisible(false).setDepth(5000);
         //this.readyIcon=this.add.image(0,0,'readyIcon').setVisible(false).setDepth(4000).setScale(0.5);
-    //-------------------------------------------------------------ログ--------------------------------------------------------------------------  
+
 
         //this.readyTalking=false;
 
@@ -312,18 +330,26 @@ export default class World extends Phaser.Scene{
                     
                     case 'door':
                         //入る処理
+                        if (this.isWraping) return;
+                        this.isWraping = true;
+
                         const targetValue=this.actionTarget.data.properties.find(p=>p.name==='target')?.value;
+
+                        //const doorName=this.actionTarget.data.name;
 
                         this.player.body.enable=false;
                         this.cameras.main.fadeOut(1000,0,0,0);
 
                         this.cameras.main.once('camerafadeoutcomplete',()=>{
+
+                            const data={fromDoor:targetValue};
+
                             switch(targetValue){
                                 case 'house':
-                                    this.scene.start('House');
+                                    this.scene.start('House',data);
                                     break;
                                 case 'shop':
-                                    this.scene.start('Shop');
+                                    this.scene.start('Shop',data);
                                     break;
                             }
                         });
