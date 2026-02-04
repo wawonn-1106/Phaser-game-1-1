@@ -219,7 +219,7 @@ export default class World extends Phaser.Scene{
 
         //this.menuManager=new MenuManager(this);//Worldのscene持ってればこれにもアクセスできる
 
-        this.player.name='テスト';
+        this.player.name='尾道太郎';
         this.profileManager.initTutorialProfile(this.player.name);
 
         //this.profileContent.drawRadarChart();

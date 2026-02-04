@@ -1,15 +1,17 @@
 export default class ProfileContent{
     constructor(uiScene,x,y){
         this.uiScene=uiScene;
+        this.worldScene=this.uiScene.scene.get('World');
+        this.graphics=null;
 
         /*this.container=this.scene.add.container(0,0);
         this.graphics=this.scene.add.graphics();
-        this.container.add(this.graphics);
+        this.container.add(this.graphics);*/
 
         this.statLabels=[];
         
-        this.setVisible(false);*/
-        this.chartTarget=null;
+        //this.setVisible(false);
+        //this.chartTarget=null;
         //this.drawRadarChart();
     }
     /*updatePosition(){
@@ -39,10 +41,23 @@ export default class ProfileContent{
         container.add(bg);
 
         //const container=document.createElement('div');
-        container.classList.add('profile-container');
+        //container.classList.add('profile-container');
+        const player=this.worldScene.player;
+        const nameText=this.uiScene.add.text(-350,-220,`名前：${player.name}`,{
+            fontSize:'32px',
+            color:'#000000',
+            fontStyle:'bold'
+        });
+
+        const editBtn=this.uiScene.add.text(-350,-170,'[名前を変更する]',{
+            fontSize:'20px',
+            color:'#000000'
+        }).setInteractive({useHandCursor:true});
+
+        container.add([nameText,editBtn]);
 
 
-        const nameDisplay=document.createElement('span');
+        /*const nameDisplay=document.createElement('span');
         nameDisplay.textContent=this.scene.player.name;
 
         //編集の時の入力欄
@@ -57,22 +72,42 @@ export default class ProfileContent{
 
         //編集開始ボタン
         const editBtn=document.createElement('button');
-        editBtn.textContent='編集';
+        editBtn.textContent='編集';*/
 
         //グラフの入れ物
-        const chartContainer=document.createElement('div');
-        chartContainer.classList.add('radar-chart-container');
-        this.chartTarget = chartContainer;
+        const chartContainer=this.uiScene.add.container(150,0);
+        this.graphics=this.uiScene.add.graphics();
+        chartContainer.add(this.graphics);
+        container.add(chartContainer);
 
-        editBtn.onclick=()=>{
-            nameDisplay.classList.add('hidden');
+        this.drawRadarChart(player.stats,chartContainer);
+        /*const chartContainer=document.createElement('div');
+        chartContainer.classList.add('radar-chart-container');
+        this.chartTarget = chartContainer;*/
+
+        editBtn.on('pointerdown',()=>{
+            this.uiScene.showInputFields((newName)=>{
+                this.worldScene.profileManager.initTutorialProfile(newName);
+                //player.name=newName;
+                nameText.setText(`名前：${this.worldScene.profileManager.playerData.name}`);
+
+                this.drawRadarChart(this.worldScene.profileManager.playerData.stats,chartContainer);
+
+                /*if(newName.includes('尾道')){
+                    this.worldScene.profileManager.initTutorialProfile(newName);
+                    this.drawRadarChart(player.stats,chartContainer);
+                }*/
+            });
+        });
+
+            /*nameDisplay.classList.add('hidden');
             editBtn.classList.add('hidden');
             saveBtn.classList.remove('hidden');
             input.classList.remove('hidden');
             input.focus();
-        }
+        }*/
 
-        saveBtn.onclick=()=>{
+        /*saveBtn.onclick=()=>{
             const newName=input.value.trim();
 
             if(newName){
@@ -87,22 +122,22 @@ export default class ProfileContent{
             input.classList.add('hidden');
         }
 
-        container.appendChild(input);
+        /*container.appendChild(input);
         container.appendChild(saveBtn);
         container.appendChild(editBtn);
         container.appendChild(nameDisplay);
         container.appendChild(chartContainer);
-        //if(input.value.trim()==='尾道') 満たしていたら５V
+        //if(input.value.trim()==='尾道') 満たしていたら５V*/
 
         return container;
 
     }
-    drawRadarChart(){
-        if(!this.chartTarget) return;
+    drawRadarChart(stats,chartContainer){
+        //if(!this.chartTarget) return;
 
         //this.chartTarget.innerHTML='';
 
-        const canvas=document.createElement('canvas');
+        /*const canvas=document.createElement('canvas');
         const size=250;
         canvas.width=size;
         canvas.height=size;
@@ -168,22 +203,19 @@ export default class ProfileContent{
             ctx.fillText(s.label, p.x * 1.3, p.y * 1.3);
         });
 
-        this.chartTarget.appendChild(canvas);
+        this.chartTarget.appendChild(canvas);*/
 
-
-
-
-        /*this.graphics.clear();
+        this.graphics.clear();
 
         this.statLabels.forEach(label=>label.destroy());
         this.statLabels=[];
 
-        const manager=this.scene.profileManager;
-        const stats=this.scene.player.stats;
-        const radius=100;
+        const manager=this.worldScene.profileManager;
+        const statsArg=stats||manager.playerData.stats;
+        const radius=150;
 
         const bgPoints=manager.getPoints(radius,null);
-        const pPoints=manager.getPoints(radius,stats);
+        const pPoints=manager.getPoints(radius,statsArg);
 
         this.graphics.lineStyle(1,0x000000,0.3).strokePoints(bgPoints,true);//黒
         this.graphics.fillStyle(0x33ff33,0.5).lineStyle(2,0x33ff33,1);//緑
@@ -197,15 +229,15 @@ export default class ProfileContent{
             const labelX=p.x*1.2;
             const labelY=p.y*1.2;
 
-            const txt=this.scene.add.text(labelX,labelY,s.label,{
+            const text=this.uiScene.add.text(labelX,labelY,s.label,{
                 fontSize:'14px',
                 color:'black',
                 align:'center'
             }).setOrigin(0.5);//どの個体値か
 
-            this.container.add(txt);
-            this.statLabels.push(txt);
-        });*/
+            chartContainer.add(text);
+            this.statLabels.push(text);
+        });
 
     }
 }

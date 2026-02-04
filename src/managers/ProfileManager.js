@@ -3,6 +3,11 @@ export default class ProfileManager{
     constructor(scene){
         this.scene=scene;
 
+        this.playerData={
+            name:'',
+            stats:{}
+        };
+
         this.statList=[
             {id:'mining',label:'採掘'},
             {id:'fishing',label:'釣り'},
@@ -50,6 +55,8 @@ export default class ProfileManager{
 
             player.stats[Phaser.Utils.Array.GetRandom(this.statList).id]=25;//Phaser.Utils.Array.GetRandom配列からランダムに一つ選ぶ
         }
+        this.playerData.name=player.name;
+        this.playerData.stats=player.stats;
     }
 }
 /*今はWorldのデータをProfileContentでもらって編集の時はProfileManager通してるけど、

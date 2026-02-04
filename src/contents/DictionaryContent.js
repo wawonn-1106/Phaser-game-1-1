@@ -21,7 +21,11 @@ export default class DictionaryContent{
         const detailContainer=this.uiScene.add.container(50,-200);
         container.add(detailContainer);
 
-        //const wordTitle。いるかな？
+        const wordTitle=this.uiScene.add.text(0,0,'単語を選択してください',{
+            fontSize:'32px',
+            color:'#000000',
+            fontStyle:'bold'
+        });
 
         const categoryLabel=this.uiScene.add.text(0,50,'',{
             fontSize:'18px'
@@ -33,7 +37,7 @@ export default class DictionaryContent{
             wordWrap:{width:400}
         });
 
-        detailContainer.add([categoryLabel,descriptionText]);//wordTitleもいるなら
+        detailContainer.add([wordTitle,categoryLabel,descriptionText]);//wordTitleもいるなら
 
         terms.forEach((term,index)=>{//相対座標にするから毎回index使う、他の場所でも
             const y=index*45;
@@ -41,10 +45,15 @@ export default class DictionaryContent{
                 fontSize:'24px',
                 color:'#000000'
             }).setInteractive({unHandler:true});//ワードクリックしたら説明が出てくる感じに。
+            //見開きの本みたいなUIにしよう
 
-            /*termButton.on('pointeerdown',()=>{
-                
-            })*/
+            termButton.on('pointerdown',()=>{
+               wordTitle.setText(term.word);
+               categoryLabel.setText(`カテゴリ：${term.category}`);
+               descriptionText.setText(term.description ||'説明はありません'); 
+            });
+
+            listContainer.add(termButton);
             /*const item=document.createElement('div');
             item.classList.add('dictionary-item');
 
