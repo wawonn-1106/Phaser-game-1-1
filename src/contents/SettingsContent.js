@@ -1,10 +1,16 @@
 export default class SettingsContent{
-    constructor(scene){
-        this.scene=scene;
+    constructor(uiScene){
+        this.uiScene=uiScene;
     }
-    createElement(){
-        const container=document.createElement('div');
-        container.classList.add('menu-content');
+    createView(){
+        const container=this.uiScene.add.container(0,0);
+
+        const bg=this.uiScene.add.image(0,0,'menu-bg').setDisplaySize(1000,600);
+        container.add(bg);
+
+
+
+        
         return container;
     }
 }

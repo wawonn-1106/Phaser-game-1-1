@@ -1,11 +1,16 @@
 //import InventoryManager from "../managers/InventoryManager.js";
 
 export default class InventoryContent{
-    constructor(scene){
-        this.scene=scene;//※このsceneはInventoryManager経由できたWorld.jsのやつ
+    constructor(uiScene){
+        this.uiScene=uiScene;//※このsceneはInventoryManager経由できたWorld.jsのやつ
     }
-    createElement(){
-        const container=document.createElement('div');
+    createView(){
+        const container=this.uiScene.add.container(0,0);
+
+        const bg=this.uiScene.add.image(0,0,'menu-bg').setDisplaySize(1000,600);
+        container.add(bg);
+
+        //const container=document.createElement('div');
         container.classList.add('inventory-container');
 
         const items=this.scene.inventoryData || [];  //World.jsのアイテムなかったら空

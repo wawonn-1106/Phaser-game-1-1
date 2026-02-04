@@ -1,10 +1,14 @@
 export default class GuideContent{
-    constructor(scene){
-        this.scene=scene;
+    constructor(uiScene){
+        this.uiScene=uiScene;
         
     }
-    createElement(){
-        const container=document.createElement('div');
+    createView(){
+        const container=this.uiScene.add.container(0,0);
+
+        const bg=this.uiScene.add.image(0,0,'menu-bg').setDisplaySize(1000,600);
+        container.add(bg);
+        /*const container=document.createElement('div');
         container.classList.add('guide-container');
 
         const title=document.createElement('h2');
@@ -12,7 +16,7 @@ export default class GuideContent{
         title.textContent='遊び方';
         container.appendChild(title);
 
-        const list=document.createElement('ul');
+        const list=document.createElement('ul');*/
 
         const controls=[
             {key:'矢印キー',action:'プレイヤーの移動'},
@@ -20,8 +24,23 @@ export default class GuideContent{
             {key:'Mキー',action:'メニューを開く'},
         ];
 
-        controls.forEach(control=>{
-            const listItem=document.createElement('li');
+        controls.forEach((control,index)=>{
+            const yOffset=-120+(index*50);
+
+            const keyLabel=this.uiScene.add.text(-250,yOffset,`[${control.key}]`,{
+                fontSize:'24px',
+                color:'#000000',
+                fontFamily:'sans-serif'
+            }).setOrigin(0,0.5);
+
+            const actionLabel=this.uiScene.add.text(0,yOffset,control.action,{
+                fontSize:'24px',
+                color:'#000000',
+                fontFamily:'sans-serif'
+            }).setOrigin(0,0.5);
+
+            container.add([keyLabel,actionLabel]);
+            /*const listItem=document.createElement('li');
             listItem.classList.add('guide-item');
 
             const keySpan=document.createElement('span');
@@ -34,9 +53,10 @@ export default class GuideContent{
 
             listItem.appendChild(keySpan);
             listItem.appendChild(actionSpan);
-            list.appendChild(listItem);
+            list.appendChild(listItem);*/
+
         });
-        container.appendChild(list);
+        //container.appendChild(list);
 
         return container;
 

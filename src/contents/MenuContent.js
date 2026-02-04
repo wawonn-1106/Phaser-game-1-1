@@ -49,7 +49,7 @@ export default class MenuContent{
 
             const label=this.scene.add.text(x,y+80,item.label,{
                 fontSize:'20px',
-                fill:'#ffffff'
+                fill:'#000000'
             }).setOrigin(0.5);
 
             container.add([icon,label]);

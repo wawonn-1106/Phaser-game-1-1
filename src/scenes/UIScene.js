@@ -8,6 +8,7 @@ export default class UIScene extends Phaser.Scene{
         this.dialogContentText=null;
         this.dialogGroup=null;
         this.dialogChoices=[];
+        this.inputFields=[];
     }
     create(){
         const worldScene=this.scene.get('World');
@@ -35,14 +36,14 @@ export default class UIScene extends Phaser.Scene{
 
         this.dialogNameText=this.add.text(gameWidth/2-120,gameHeight-200,'',{
             fontSize:'22px',
-            color:'#ffff00',
+            color:'#000000',
             fontStyle:'bold',
             fontFamily:'sans-serif'
         });
 
         this.dialogContentText=this.add.text(gameWidth/2-120,gameHeight-165,'',{
             fontSize:'24px',
-            color:'#ffffff',
+            color:'#000000',
             wordWrap:{width:500},
             lineSpacing:10
         });
@@ -65,8 +66,57 @@ export default class UIScene extends Phaser.Scene{
             this.portrait.setVisible(false);
         }
     }
-    showInputField(){
+    showInputField(callback){
         //また今度にしよ
+        this.clearInputFields();
+
+        const gameWidth=this.scale.width;
+        const gameHeight=this.scale.height;
+
+        const inputBg=this.add.image(gameWidth/2,gameHeight/2,'input-bg').setDepth(5000);
+
+        let currentText='';
+        const inputTextDisplay=this.add.text(gameWidth/2,gameHeight/2-20,'',{
+            fontSize:'32px',
+            color:'#000000'
+        }).setOrigin(0.5).setDepth(5001);
+
+        const submitBtn=this.add.image(gameWidth/2,gameWidth/2+60,'submit-btn')
+            .setInteractive({unHandCursor:true})
+            .setDepth(5001);
+        
+        const submitText=this.add.text(gameWidth/2,gameHeight/2+60,'決定',{
+            fontSize:'20px'
+        }).setOrigin(0.5).setDepth(5002);
+
+        const keyHandler=(event)=>{
+            if(event.key==='Enter'){
+                confirmInput();
+            }else if(event.key==='Backspace'){
+                currentText=currentText.slice(0,-1);
+            }else if(event.key.length===1){
+                currentText+=event.key;
+            }
+            //inputTextDisplay.setText(currentText+'|');
+        };
+
+        this.input.keyboard.on('keydown',keyHandler);
+
+        const confirmInput=()=>{
+            if(currentText.trim()==='')return;
+
+            this.inputFields.keyboard.off('keydown',keyHandler);
+            this.clearInputFields();
+            callback(currentText);
+        };
+
+        submitBtn.on('pointerdown',confirmInput);
+
+        this.inputFields.push(inputBg,inputTextDisplay,submitBtn,submitText);
+    }
+    clearInputFields(){
+        this.inputFields.forEach(field=>field.destroy());
+        this.inputFields=[];
     }
     showChoices(choices,callback){
         this.clearChoices();

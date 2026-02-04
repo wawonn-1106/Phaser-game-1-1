@@ -1,17 +1,51 @@
 export default class DictionaryContent{
-    constructor(scene){
-        this.scene=scene;
+    constructor(uiScene){
+        this.uiScene=uiScene;
+
+        this.worldScene=this.uiScene.scene.get('World');
     }
-    createElement(){
-        const container=document.createElement('div');
-        container.classList.add('dictionary-content');//ここは変えてね
+    createView(){
+        const container=this.uiScene.add.container(0,0);
+
+        const bg=this.uiScene.add.image(0,0,'menu-bg').setDisplaySize(1000,600);
+        container.add(bg);
+        //const container=document.createElement('div');
+        //container.classList.add('dictionary-content');//ここは変えてね
 
 
-        const terms=this.scene.dictionaryManager.getTerms();//DictionaryManagerがjsonでデータを取る
+        const terms=this.worldScene.dictionaryManager.getTerms();//DictionaryManagerがjsonでデータを取る
         //↑Worldで、this.dictionaryManager=new DictionaryManager(this)をやってる前提
+        const listContainer=this.uiScene.add.container(-450,-200);
+        container.add(listContainer);
 
-        terms.forEach(term=>{
-            const item=document.createElement('div');
+        const detailContainer=this.uiScene.add.container(50,-200);
+        container.add(detailContainer);
+
+        //const wordTitle。いるかな？
+
+        const categoryLabel=this.uiScene.add.text(0,50,'',{
+            fontSize:'18px'
+        });
+
+        const descriptionText=this.uiScene.add.text(0,100,'',{
+            fontSize:'22px',
+            color:'#000000',
+            wordWrap:{width:400}
+        });
+
+        detailContainer.add([categoryLabel,descriptionText]);//wordTitleもいるなら
+
+        terms.forEach((term,index)=>{//相対座標にするから毎回index使う、他の場所でも
+            const y=index*45;
+            const termButton=this.uiScene.add.text(0,y,`${term.word}`,{
+                fontSize:'24px',
+                color:'#000000'
+            }).setInteractive({unHandler:true});//ワードクリックしたら説明が出てくる感じに。
+
+            /*termButton.on('pointeerdown',()=>{
+                
+            })*/
+            /*const item=document.createElement('div');
             item.classList.add('dictionary-item');
 
             const word=document.createElement('div');
@@ -35,7 +69,7 @@ export default class DictionaryContent{
             item.appendChild(description);
             item.appendChild(example);
 
-            container.appendChild(item);
+            container.appendChild(item);*/
         });
 
         return container;

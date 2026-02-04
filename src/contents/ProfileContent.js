@@ -1,6 +1,6 @@
 export default class ProfileContent{
-    constructor(scene,x,y){
-        this.scene=scene;
+    constructor(uiScene,x,y){
+        this.uiScene=uiScene;
 
         /*this.container=this.scene.add.container(0,0);
         this.graphics=this.scene.add.graphics();
@@ -32,8 +32,13 @@ export default class ProfileContent{
             this.updatePosition();
         }
     }*/
-    createElement(){
-        const container=document.createElement('div');
+    createView(){
+        const container=this.uiScene.add.container(0,0);
+
+        const bg=this.uiScene.add.image(0,0,'menu-bg').setDisplaySize(1000,600);
+        container.add(bg);
+
+        //const container=document.createElement('div');
         container.classList.add('profile-container');
 
 
