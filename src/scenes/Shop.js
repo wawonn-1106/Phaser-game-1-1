@@ -29,6 +29,8 @@ export default class Shop extends Phaser.Scene{
         this.cursors = this.input.keyboard.createCursorKeys();
 
         const objectLayer=map.getObjectLayer('Object');
+        
+        this.isWraping = false;
         if(objectLayer){
             objectLayer.objects.forEach(obj=>{
                 if(obj.name==='exit'){

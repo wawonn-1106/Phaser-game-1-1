@@ -28,6 +28,9 @@ export default class House extends Phaser.Scene{
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
+        this.isWraping = false;
+        /*scene.startは戻った時、constructorの初期化は行われないらしいから、ここでfalseにする*/
+
         const objectLayer=map.getObjectLayer('Object');
         if(objectLayer){
             objectLayer.objects.forEach(obj=>{

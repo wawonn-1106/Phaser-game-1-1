@@ -6,6 +6,7 @@ import RankingContent from '../contents/RankingContent.js';
 import ReviewContent from '../contents/ReviewContent.js';
 import DictionaryContent from '../contents/DictionaryContent.js';
 import GuideContent from '../contents/GuideContent.js';
+import MachineContent from '../contents/MachineContent.js';
 
 export default class MenuManager{
     constructor(uiScene,worldScene){
@@ -27,7 +28,8 @@ export default class MenuManager{
             'ranking':new RankingContent(uiScene),
             'settings':new SettingsContent(uiScene),
             'dictionary':new DictionaryContent(uiScene),
-            'guide':new GuideContent(uiScene)
+            'guide':new GuideContent(uiScene),
+            'machine':new MachineContent(uiScene)
         };
     }
     /*update(){

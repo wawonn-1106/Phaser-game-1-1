@@ -7,6 +7,7 @@ import InventoryManager from '../managers/InventoryManager.js';
 import ProfileManager from '../managers/ProfileManager.js';
 import DictionaryManager from '../managers/DictionaryManager.js';
 import ProfileContent from '../contents/ProfileContent.js';
+import MachineManager from '../managers/MachineManager.js';
 
 export default class World extends Phaser.Scene{
     constructor(){
@@ -38,6 +39,7 @@ export default class World extends Phaser.Scene{
         this.dictionaryManager=new DictionaryManager(this);
         this.profileManager=new ProfileManager(this); 
         this.dialogManager=new DialogManager(this);
+        this.machineManager=new MachineManager(this);
         //this.profileContent=new ProfileContent(this,400,300);
     }
     /*async syncMoneyWithServer(newMoney){
@@ -73,6 +75,7 @@ export default class World extends Phaser.Scene{
 
         this.load.image('menu-bg','assets/images/menu-bg.png');
         this.load.image('dialog-bg','assets/images/dialog-bg.png');
+        this.load.image('machine-bg','assets/images/machine-bg.png');
         this.load.image('review','assets/images/review.png');
         this.load.image('settings','assets/images/settings.png');
         this.load.image('ranking','assets/images/ranking.png');
@@ -310,6 +313,7 @@ export default class World extends Phaser.Scene{
 
 
         //this.readyTalking=false;
+        this.isWraping = false;
 
         this.input.keyboard.on('keydown-SPACE',()=>{
             if(this.dialogManager.isTalking){
