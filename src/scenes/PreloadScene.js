@@ -1,0 +1,54 @@
+export default class PreloadScene extends Phaser.Scene{
+    constructor(){
+        super({key:'PreloadScene'});
+    }
+    preload(){
+//--------------------------------その他------------------------------------------------------
+        this.load.image('player','assets/images/player.png');
+        this.load.image('heart','assets/images/heart.png');
+//--------------------------------tilemap------------------------------------------------------
+        //this.load.image('tileset-test1','assets/tilesets/Beginning Fields.png')
+        //this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test1.tmj');
+        //this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test.tmj');
+        this.load.tilemapTiledJSON('map','assets/tilemaps/economyRPG.json');
+        this.load.tilemapTiledJSON('house','assets/tilemaps/House.json');
+        this.load.tilemapTiledJSON('shop','assets/tilemaps/Shop.json');
+//--------------------------------天気------------------------------------------------------
+        this.load.image('rain','assets/images/player.png');
+        this.load.image('snow','assets/images/player.png');
+//--------------------------------json------------------------------------------------------
+        this.load.json('chapter1','assets/data/dialog1.json');
+        this.load.json('termsData','assets/data/dictionary.json');
+        this.load.json('recipesData','assets/data/recipes.json');
+//--------------------------------tileset------------------------------------------------------
+        //this.load.image('tileset','assets/tilesets/pipo-map001.png');
+        this.load.image('tileset','assets/tilesets/Serene_Village_48x48.png');
+//--------------------------------タイトル------------------------------------------------------       
+        this.load.image('title','assets/images/title-image.png');
+        this.load.image('start-btn','assets/images/start-btn.png');//その場しのぎの画像
+        this.load.image('continue-btn','assets/images/continue-btn.png');
+//--------------------------------UI------------------------------------------------------
+        this.load.image('hotbar','assets/images/hotbar.png');
+        this.load.image('slot-selected','assets/images/hotbar.png');//用意してね
+        this.load.image('time-bg','assets/images/time-bg.png');//まだ
+        this.load.image('submit-btn','assets/images/submit-btn.png');
+        this.load.image('input-bg','assets/images/choice-btn.png');//まだ
+        this.load.image('choice-btn','assets/images/choice-btn.png');
+
+        this.load.image('menu-bg','assets/images/menu-bg.png');
+        this.load.image('dialog-bg','assets/images/machine-bg.png');//dialog-bg用意する
+        this.load.image('portrait-container','assets/images/portrait-container.png');
+        this.load.image('machine-bg','assets/images/machine-bg.png');
+        this.load.image('review','assets/images/review.png');
+        this.load.image('settings','assets/images/settings.png');
+        this.load.image('ranking','assets/images/ranking.png');
+        this.load.image('profile','assets/images/profile.png');
+        this.load.image('returnTitle','assets/images/returnTitle.png');
+        this.load.image('inventory','assets/images/inventory.png');
+        this.load.image('dictionary','assets/images/dictionary.png');
+        this.load.image('guide','assets/images/guide.png');
+    }
+    create(){
+        this.scene.start('Title');//全部ダウンロードしたら、Titleに飛ばす
+    }
+}

@@ -3,9 +3,7 @@ export default class Title extends Phaser.Scene{
         super({key:'Title'});
     }
     preload(){
-        this.load.image('title','assets/images/title-image.png');
-        this.load.image('start-btn','assets/images/start-btn.png');//その場しのぎの画像
-        this.load.image('continue-btn','assets/images/continue-btn.png');
+        //引っ越し
     }
     create(){
         if (this.scene.isActive('UIScene')) {

@@ -39,7 +39,7 @@ export default class World extends Phaser.Scene{
         this.dictionaryManager=new DictionaryManager(this);
         this.profileManager=new ProfileManager(this); 
         this.dialogManager=new DialogManager(this);
-        this.machineManager=new MachineManager(this);
+        this.machineManager=null;//
         //this.profileContent=new ProfileContent(this,400,300);
     }
     /*async syncMoneyWithServer(newMoney){
@@ -56,43 +56,7 @@ export default class World extends Phaser.Scene{
         }
     }*/
     preload(){
-        this.load.image('player','assets/images/player.png');
-        this.load.image('heart','assets/images/heart.png');
-        //this.load.image('tileset-test1','assets/tilesets/Beginning Fields.png')
-        //this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test1.tmj');
-        //this.load.tilemapTiledJSON('map','assets/tilemaps/tilemap-test.tmj');
-        this.load.tilemapTiledJSON('map','assets/tilemaps/economyRPG.json');
-        this.load.tilemapTiledJSON('house','assets/tilemaps/House.json');
-        this.load.tilemapTiledJSON('shop','assets/tilemaps/Shop.json');
-
-        this.load.image('rain','assets/images/player.png');
-        this.load.image('snow','assets/images/player.png');
-
-        this.load.json('chapter1','assets/data/dialog1.json');
-        this.load.json('termsData','assets/data/dictionary.json');
-
-        //this.load.image('tileset','assets/tilesets/pipo-map001.png');
-        this.load.image('tileset','assets/tilesets/Serene_Village_48x48.png');
-
-        this.load.image('hotbar','assets/images/hotbar.png');
-        this.load.image('slot-selected','assets/images/hotbar.png');//用意してね
-        this.load.image('time-bg','assets/images/time-bg.png');//まだ
-        this.load.image('submit-btn','assets/images/submit-btn.png');
-        this.load.image('input-bg','assets/images/choice-btn.png');//まだ
-        this.load.image('choice-btn','assets/images/choice-btn.png');
-
-        this.load.image('menu-bg','assets/images/menu-bg.png');
-        this.load.image('dialog-bg','assets/images/machine-bg.png');//dialog-bg用意する
-        this.load.image('portrait-container','assets/images/portrait-container.png');
-        this.load.image('machine-bg','assets/images/machine-bg.png');
-        this.load.image('review','assets/images/review.png');
-        this.load.image('settings','assets/images/settings.png');
-        this.load.image('ranking','assets/images/ranking.png');
-        this.load.image('profile','assets/images/profile.png');
-        this.load.image('returnTitle','assets/images/returnTitle.png');
-        this.load.image('inventory','assets/images/inventory.png');
-        this.load.image('dictionary','assets/images/dictionary.png');
-        this.load.image('guide','assets/images/guide.png');
+        //preloadSceneに引っ越し
     }
     /*async loadPlayerData() {
         try {
@@ -158,6 +122,10 @@ export default class World extends Phaser.Scene{
         overlay.setDepth(2000);
     }*/
     create(data){
+        this.machineManager=new MachineManager(this);/*jsonの準備ができてなかった。
+        UIScene経由で、MachineManageにデータ渡してるけど、dialogDataと同じように
+        json系のデータはWirldで全部橋渡ししたほうがスマートかもしれない*/
+
         //this.loadPlayerData();
         //await this.fetchWeather();
         /*async create(){}  await this.fetchWeather();を追加する*/

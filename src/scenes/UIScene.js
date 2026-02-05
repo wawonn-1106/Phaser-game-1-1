@@ -1,5 +1,6 @@
 import MenuManager from "../managers/MenuManager.js";
 import DictionaryContent from "../contents/DictionaryContent.js";
+import MachineContent from "../contents/MachineContent.js";
 //import DictionaryManager from "../managers/DictionaryManager.js";
 
 export default class UIScene extends Phaser.Scene{
@@ -40,6 +41,7 @@ export default class UIScene extends Phaser.Scene{
 
         this.dictionaryContent = new DictionaryContent(this);
         this.menuManager=new MenuManager(this,worldScene);
+        this.machineContent = new MachineContent(this);
         worldScene.menuManager=this.menuManager;
 
         if(worldScene){
