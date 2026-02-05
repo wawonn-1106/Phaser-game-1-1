@@ -5,6 +5,8 @@ export default class MachineContent{
         this.uiScene=uiScene;   
         this.worldScene=this.uiScene.scene.get('World');
         this.machineManager=new MachineManager(this.uiScene);
+
+        this.confirmBtn = null;
     }
     createView(){
         const container=this.uiScene.add.container(0,0);
@@ -35,7 +37,8 @@ export default class MachineContent{
 
             recipeText.on('pointerdown',()=>{
                 //ここで個数とかを入力する処理とかに入る
-                console.log('クリックテスト');
+                this.confirmCreate(index);
+                //console.log('クリックテスト');
             });
 
             recipeBtn.add(recipeText);
@@ -55,5 +58,26 @@ export default class MachineContent{
         container.add(closeBtn);
 
         return container;
+    }
+    confirmCreate(targetIndex){
+        const recipe=this.machineManager.recipes[targetIndex];
+
+        const playerData=this.uiScene.cache.json.get('playerData');
+        const processingRank=playerData.statsList.processing;
+
+        if(this.confirmBtn) this.confirmBtn.destroy();
+
+        this.confirmBtn=this.uiScene.add.text(100,200,`【${recipe.name}を加工する】`,{
+            fontSize:'32px',
+            color:'#000000',
+            padding:10
+        }).setInteractive({useHandCursor:true});
+
+        this.confirmBtn.once('pointerdown',()=>{
+            const result=this.machineManager.tryCraft(recipe,processingRank);
+            console.log(result);
+            this.confirmBtn.destroy();
+        });
+
     }
 }

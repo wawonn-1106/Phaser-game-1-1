@@ -35,11 +35,6 @@ export default class World extends Phaser.Scene{
 
         //this.SERVER_URL='http://localhost:3000';
 
-        
-        this.dictionaryManager=new DictionaryManager(this);
-        this.profileManager=new ProfileManager(this); 
-        this.dialogManager=new DialogManager(this);
-        this.machineManager=null;//
         //this.profileContent=new ProfileContent(this,400,300);
     }
     /*async syncMoneyWithServer(newMoney){
@@ -122,6 +117,9 @@ export default class World extends Phaser.Scene{
         overlay.setDepth(2000);
     }*/
     create(data){
+        this.dictionaryManager=new DictionaryManager(this);
+        this.profileManager=new ProfileManager(this); 
+        this.dialogManager=new DialogManager(this);
         this.machineManager=new MachineManager(this);/*jsonの準備ができてなかった。
         UIScene経由で、MachineManageにデータ渡してるけど、dialogDataと同じように
         json系のデータはWirldで全部橋渡ししたほうがスマートかもしれない*/
@@ -205,8 +203,10 @@ export default class World extends Phaser.Scene{
 
         //this.menuManager=new MenuManager(this);//Worldのscene持ってればこれにもアクセスできる
 
-        this.player.name='尾道太郎';
-        this.profileManager.initTutorialProfile(this.player.name);
+        //this.player.name='尾道太郎';
+        const testData=this.cache.json.get('playerData');
+        //最初の書き換えをjsonでやって、↑そのデータを受け取って個体値の決定。
+        this.profileManager.initTutorialProfile(testData.name);
 
         //this.profileContent.drawRadarChart();
         

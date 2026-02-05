@@ -1,3 +1,14 @@
 {
-    
+    "name":"テスト",
+    "money":5000,
+    "statsList":{
+        "lumbering":5,
+        "fishing":2,
+        "mining":3,
+        "farming":5,
+        "processing":2
+    },
+    "inventory":[
+        
+    ]
 }

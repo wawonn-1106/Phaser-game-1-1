@@ -20,6 +20,7 @@ export default class PreloadScene extends Phaser.Scene{
         this.load.json('chapter1','assets/data/dialog1.json');
         this.load.json('termsData','assets/data/dictionary.json');
         this.load.json('recipesData','assets/data/recipes.json');
+        this.load.json('playerData','assets/data/playerData.json');
 //--------------------------------tileset------------------------------------------------------
         //this.load.image('tileset','assets/tilesets/pipo-map001.png');
         this.load.image('tileset','assets/tilesets/Serene_Village_48x48.png');
