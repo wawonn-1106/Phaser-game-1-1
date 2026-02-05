@@ -5,10 +5,12 @@ export default class DictionaryContent{
         this.worldScene=this.uiScene.scene.get('World');
     }
     createQuickView(termData){
-        const container=this.uiScene.add.container(0,0);
+        const container=this.uiScene.add.container(0,0).setDepth(10000);
+
+        const overlay=this.uiScene.add.rectangle(0,0,1280,720,0x000000,0.3).setInteractive();
         
-        const bg=this.uiScene.add.image(0,0,'menu-bg').setDisplaySize(1000,600);
-        container.add(bg);//いったんmenu-bgで代用
+        const bg=this.uiScene.add.image(0,0,'hotber').setDisplaySize(400,300);
+        //container.add(bg);//いったんmenu-bgで代用
 
         const title=this.uiScene.add.text(-180,-110,`[${termData.word}]`,{
             fontSize:'24px',
@@ -28,7 +30,12 @@ export default class DictionaryContent{
             wordWrap:{width:360}
         });
 
-        container.add([title,description,example]);
+        container.add([overlay,bg,title,description,example]);
+
+        overlay.once('pointerdown',()=>{
+            container.destroy();
+        });
+
         return container;
     }
     createView(){

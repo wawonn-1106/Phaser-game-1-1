@@ -67,6 +67,8 @@ export default class UIScene extends Phaser.Scene{
             }
             this.updateSelectorPosition();
         });
+
+        //his.input.setTopOnly(true);
     }
     createHealthBar(){
         const startX=30;
@@ -172,17 +174,29 @@ export default class UIScene extends Phaser.Scene{
             color:'#000000',
             wordWrap:{width:500},
             lineSpacing:10,
-            interactive: true
-        }).setDepth(5000);
+            padding: { top: 10 },
+            //interactive:true,
+            tags:{
+                area:{
+                    mode:'click'
+                }
+            },
+            area:true
+        }).setDepth(4005).setVisible(false);
+
         this.dialogContentText.setInteractive();//あああああああああああ
 
-        this.dialogGroup.add([winBg,this.portrait,this.dialogNameText,this.dialogContentText]);
+        this.dialogGroup.add([winBg,this.portrait,this.dialogNameText]);
+        //this.dialogGroup.removeInteractive();
     }
     showDialogWindow(){
         this.dialogGroup.setVisible(true);
+        this.dialogContentText.setVisible(true);
     }
     hideDialogWindow(){
         this.dialogGroup.setVisible(false);
+        this.dialogContentText.setVisible(false);
+
         this.clearChoices();
         this.clearInputFields();
     }
@@ -242,7 +256,7 @@ export default class UIScene extends Phaser.Scene{
 
         submitBtn.on('pointerdown',confirmInput);
 
-        this.inputFields.push(inputBg,inputTextDisplay,submitBtn,submitText);
+        this.inputFields.push(inputBg,inputTextDisplay,submitBtn);//,submitText除外
     }
     clearInputFields(){
         this.inputFields.forEach(field=>field.destroy());

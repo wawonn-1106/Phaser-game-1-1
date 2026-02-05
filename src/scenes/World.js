@@ -75,7 +75,7 @@ export default class World extends Phaser.Scene{
         this.load.image('tileset','assets/tilesets/Serene_Village_48x48.png');
 
         this.load.image('hotbar','assets/images/hotbar.png');
-        this.load.image('slot-selected','assets/images/slot-selected.png');//まだ
+        this.load.image('slot-selected','assets/images/hotbar.png');//用意してね
         this.load.image('time-bg','assets/images/time-bg.png');//まだ
         this.load.image('submit-btn','assets/images/submit-btn.png');
         this.load.image('input-bg','assets/images/choice-btn.png');//まだ
@@ -326,7 +326,7 @@ export default class World extends Phaser.Scene{
 
         this.readyIcon=this.add.text(0,0,'▼',
             {fontSize:'24px'}
-        ).setOrigin(0.5).setVisible(false).setDepth(5000);
+        ).setOrigin(0.5).setVisible(false).setDepth(10);
 
         if(objectLayer){//マップの移動、家を出るのと同じロジック。触れるだけでOK
             objectLayer.objects.forEach(obj=>{

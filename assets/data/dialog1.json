@@ -40,7 +40,7 @@
   { 
     "id": "not_ready", 
     "type": "text", 
-    "text": "無理は禁物じゃ。村でゆっくり準備を整えるが良い。[area=機会費用]機会費用[/area]",
+    "text": "無理は禁物じゃ。村でゆっくり準備を整えるが良い。",
     "portrait":"player",
     "next": "end"
   },

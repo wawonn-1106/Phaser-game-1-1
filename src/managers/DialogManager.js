@@ -175,7 +175,7 @@ export default class DialogManager {
         }
         this.showLine();
     }
-    updateTextDisplay(displayText){
+    updateTextDisplay(displayTerm){
 
         /*this.uiScene.dialogContentText.off('area.down');
         this.uiScene.dialogContentText.setText(displayText);*/
@@ -185,13 +185,23 @@ export default class DialogManager {
 
         textContent.off('area.down');
 
-        textContent.setText(displayText);
+        textContent.setText(displayTerm);
 
+        if (textContent.updateInteractive) {
+            textContent.updateInteractive();
+        }
 
-        textContent.on('area.down',(areaKey)=>{
+        this.uiScene.time.delayedCall(20,()=>{
+            if(textContent.updateInteractive){
+                textContent.updateInteractive();
+            }
+            this.scene.input.enableDebug(textContent, 0xff00ff);
+
+            textContent.on('area.down',(areaKey)=>{
             //const termsData=this.scene.dictionaryManager.getTermByWord(areaKey);
-            const termsData = this.scene.cache.json.get('termsData');
-            const termData=termsData.terms.find(term=>term.word===areaKey);
+            /*const termsData = this.scene.cache.json.get('termsData');
+            const termData=termsData.terms.find(term=>term.word===areaKey);*/
+            const termData = this.scene.dictionaryManager.getTermByWord(areaKey);
 
             if(termData){
                 this.uiScene.dictionaryContent.createQuickView(termData);
@@ -201,6 +211,11 @@ export default class DialogManager {
                 });*/
             }
         });
+        })
+        
+
+
+        
     }
     end() {
         this.isTalking = false;
