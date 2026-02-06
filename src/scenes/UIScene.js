@@ -231,9 +231,9 @@ export default class UIScene extends Phaser.Scene{
         ).setDepth(10000);
         //dom.classList.remove('hidden');
 
-        const inputField=dom.getChildById('input-field');
+        const inputField=dom.getChildByID('input-field');//IdではなくID
 
-        const submitBtn=this.add.image(gameWidth/2,gameWidth/2+300,'player')
+        const submitBtn=this.add.image(gameWidth/2,gameHeight/2+300,'player')
             .setScale(0.1)//↑submit-btn、playerで代用
             .setInteractive({useHandCursor:true})
             //.setOrigin(0.5)

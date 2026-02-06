@@ -1,5 +1,5 @@
 import Player from '../entities/Player.js';
-import DialogManager from '../managers/DialogManager.js';
+//import DialogManager from '../managers/DialogManager.js';
 import NPC from '../entities/NPC.js';
 //import House from './House.js';
 import MenuManager from '../managers/MenuManager.js';
@@ -7,8 +7,9 @@ import InventoryManager from '../managers/InventoryManager.js';
 import ProfileManager from '../managers/ProfileManager.js';
 import DictionaryManager from '../managers/DictionaryManager.js';
 import ProfileContent from '../contents/ProfileContent.js';
-import MachineManager from '../managers/MachineManager.js';
+//import MachineManager from '../managers/MachineManager.js';
 import BaseScene from './BaseScene.js';
+//↑共通化してインスタンスを作る必要はなくなったけど、importはいる
 
 export default class World extends BaseScene{
     constructor(){
@@ -118,7 +119,8 @@ export default class World extends BaseScene{
         overlay.setDepth(2000);
     }*/
     create(data){
-        this.initManagers()
+        this.initManagers();
+        this.initInput();
         /*this.dictionaryManager=new DictionaryManager(this);
         this.profileManager=new ProfileManager(this); 
         this.dialogManager=new DialogManager(this);
@@ -131,9 +133,9 @@ export default class World extends BaseScene{
         /*async create(){}  await this.fetchWeather();を追加する*/
     //-------------------------------------------------------マップ---------------------------------------------------------------------------------
     
+        const map=this.createMap('map','Serene_Village_48x48','tileset');
     
-    
-        const map = this.make.tilemap({ key: 'map' });
+        /*const map = this.make.tilemap({ key: 'map' });
 
         const tileset = map.addTilesetImage('Serene_Village_48x48','tileset');
 
@@ -163,7 +165,8 @@ export default class World extends BaseScene{
 
     //----------------------------------------------------------操作説明ボタン------------------------------------------------------------------------------
 
-        const guideButton=this.add.image(1230,670,'guide')
+        const guideButton=this.add.image(1230,670,'guide')//UISceneに移行する
+
                 .setOrigin(0.5)
                 .setScale(0.7)
                 .setInteractive({useHandCursor:true})
@@ -246,7 +249,7 @@ export default class World extends BaseScene{
             frameRate:20,
             //repeat:0の省略(-1は無限、0は１回)
         });*/
-
+        //これもBaseSceneでやる
     //--------------------------------------------------------NPC-------------------------------------------------------------
         //this.elder=new NPC(this,800,300,'player');
         this.villagers=this.physics.add.group();
@@ -255,7 +258,7 @@ export default class World extends BaseScene{
             {x:800,y:800,key:'player',startId:'greet',name:'マイク'},
             {x:1000,y:1000,key:'player',startId:'start',name:'ジェシカ'},
             {x:1200,y:1200,key:'player',startId:'daily',name:'サンドラ'},
-        ];
+        ];//これをjsonにしよう今日
 
         villagerData.forEach(data=>{
             //第五引数のdataはNPC.jsでconfigとして受け取る。必要に応じてconfig.startIdで取得できる。第六まで増やす必要もない。
@@ -263,7 +266,13 @@ export default class World extends BaseScene{
             this.villagers.add(newVillager);
         });
     //----------------------------------------------------------当たり判定----------------------------------------------------------------------
-        this.physics.add.collider(this.player,this.OnGroundLayer);
+        this.setupCollisions(this.player);
+        this.setupCollisions(this.villagers);
+
+        this.physics.add.collider(this.player,this.villagers);
+        this.physics.add.collider(this.villagers,this.villagers);
+
+        /*this.physics.add.collider(this.player,this.OnGroundLayer);
         this.physics.add.collider(this.player,this.HouseLayer);
         this.physics.add.collider(this.player,this.GroundLayer);
 
@@ -272,7 +281,7 @@ export default class World extends BaseScene{
         this.physics.add.collider(this.villagers,this.GroundLayer);
         this.physics.add.collider(this.villagers,this.villagers,null,null,this);
 
-        this.physics.add.collider(this.player,this.villagers);
+        this.physics.add.collider(this.player,this.villagers);*/
     //----------------------------------------------------------アクション系-----------------------------------------------------------------------
         this.interactables=[];
 
@@ -336,7 +345,7 @@ export default class World extends BaseScene{
         //this.readyTalking=false;
         this.isWraping = false;
 
-        this.input.keyboard.on('keydown-SPACE',()=>{
+        /*this.input.keyboard.on('keydown-SPACE',()=>{
             if (this.dialogManager.inputMode) return;
 
             if(this.dialogManager.isTalking){
@@ -397,7 +406,7 @@ export default class World extends BaseScene{
                 /*this.money+=100;
                 if(this.moneyText) this.moneyText.setText(`所持金：${this.money}`);
                 this.syncMoneyWithServer(this.money);*/
-        });
+        //});*/
     //-------------------------------------------------------------インベントリ--------------------------------------------------------------------------
         this.inventoryManager=new InventoryManager(this);
 
@@ -432,12 +441,15 @@ export default class World extends BaseScene{
 
     //-------------------------------------------------------------カメラ--------------------------------------------------------------------------
        
-        this.cameras.main.startFollow(this.player,true,0.1,0.1);
-        this.cameras.main.setBounds(0,0,map.widthInPixels,map.heightInPixels);
+        this.setupCamera(this.player);
+        /*this.cameras.main.startFollow(this.player,true,0.1,0.1);
+        this.cameras.main.setBounds(0,0,map.widthInPixels,map.heightInPixels);*/
         
         
     }
     update(time,delta){
+        this.updateInteractables(this.player);
+
         this.player.update();
         this.villagers.getChildren().forEach(v=>v.update(time,delta));
 
