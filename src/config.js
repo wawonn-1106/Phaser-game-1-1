@@ -5,6 +5,7 @@ import Shop from './scenes/Shop.js';
 import UIScene from './scenes/UIScene.js';
 import Forest from './scenes/Forest.js';
 import PreloadScene from './scenes/PreloadScene.js';
+import BaseScene from './scenes/BaseScene.js';
 
 export const config={
     type:Phaser.AUTO,
@@ -35,5 +36,5 @@ export const config={
     zoom:1,
     backgroundColor:'#000000',
     pixelArt:true,
-    scene:[PreloadScene,Title,World,House,Shop,Forest,UIScene]//sceneの順番は表示する順番でもあるからtitleが先
+    scene:[PreloadScene,BaseScene,Title,World,House,Shop,Forest,UIScene]//sceneの順番は表示する順番でもあるからtitleが先
 }

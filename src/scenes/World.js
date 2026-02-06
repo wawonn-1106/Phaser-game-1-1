@@ -8,8 +8,9 @@ import ProfileManager from '../managers/ProfileManager.js';
 import DictionaryManager from '../managers/DictionaryManager.js';
 import ProfileContent from '../contents/ProfileContent.js';
 import MachineManager from '../managers/MachineManager.js';
+import BaseScene from './BaseScene.js';
 
-export default class World extends Phaser.Scene{
+export default class World extends BaseScene{
     constructor(){
         super({key:'World'});
 
@@ -25,11 +26,11 @@ export default class World extends Phaser.Scene{
         this.keys=null;
         this.currentWeather='Clear';
         this.weatherEffect=null;
-        this.interactables=[];
+        /*this.interactables=[];
         //this.nearstTarget=null;
         this.readyIcon=null;
         this.readyActionType=null;
-        this.actionTarget=null;
+        this.actionTarget=null;*/
         this.fromDoor=null;
         this.isWraping=false;
 
@@ -117,7 +118,8 @@ export default class World extends Phaser.Scene{
         overlay.setDepth(2000);
     }*/
     create(data){
-        this.dictionaryManager=new DictionaryManager(this);
+        this.initManagers()
+        /*this.dictionaryManager=new DictionaryManager(this);
         this.profileManager=new ProfileManager(this); 
         this.dialogManager=new DialogManager(this);
         this.machineManager=new MachineManager(this);/*jsonの準備ができてなかった。
@@ -386,6 +388,10 @@ export default class World extends Phaser.Scene{
                         //加工画面を開く
                         this.menuManager.toggle('machine');
                         break;
+                    case 'displayShelf':
+                        //店に並べる画面
+                        console.log('クリックされた');
+                        break;
                 }
             }                
                 /*this.money+=100;
@@ -437,7 +443,7 @@ export default class World extends Phaser.Scene{
 
         //this.menuManager.update();
         
-        let minDistance=100;
+        /*let minDistance=100;
         let closestItem=null;//機械、ドア、NPCで近いものに▼マークを付ける
         let bestPriority=999;
 

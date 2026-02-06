@@ -45,7 +45,7 @@ export default class UIScene extends Phaser.Scene{
         worldScene.menuManager=this.menuManager;
 
         if(worldScene){
-            worldScene.dialogManager.setUIScene(this);
+            worldScene.dialogManager?.setUIScene(this);
         }
 
         this.keys=this.input.keyboard.addKeys('M,I,P,A,R,S,D');
@@ -63,7 +63,7 @@ export default class UIScene extends Phaser.Scene{
 
         this.input.on('wheel',(pointer,gameObjects,deltaX,deltaY,deltaZ)=>{
 
-            if (worldScene.dialogManager.isTalking || worldScene.dialogManager.inputMode) return;
+            if (worldScene.dialogManager?.isTalking || worldScene.dialogManager?.inputMode) return;
 
             if(deltaY>0){
                 this.selectedSlotIndex=(this.selectedSlotIndex+1)%9;
@@ -379,7 +379,7 @@ export default class UIScene extends Phaser.Scene{
     update(time,delta){
         const world=this.scene.get('World');
 
-        const isStopped=world.dialogManager.isTalking || this.menuManager.isOpenMenu;
+        const isStopped=world.dialogManager?.isTalking || this.menuManager.isOpenMenu;
         //会話、メニュー開いてる間は時間を止める
         if(!isStopped){
             this.gameTime.elapsed+=delta;

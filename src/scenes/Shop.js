@@ -1,13 +1,27 @@
-export default class Shop extends Phaser.Scene{
+import NPC from '../entities/NPC.js';
+import DialogManager from '../managers/DialogManager.js';
+import BaseScene from './BaseScene.js';
+
+export default class Shop extends BaseScene{
     constructor(){
         super({key:'Shop'});
+
         this.isWraping=false;
         this.fromDoor=null;
+        this.interactables=[];
+        //this.nearstTarget=null;
+        this.readyIcon=null;
+        this.readyActionType=null;
+        this.actionTarget=null;
+        this.fromDoor=null;
+        //this.isWraping=false;
     }
     init(data){
         this.fromDoor=data.fromDoor;
     }
     create(){
+        this.dialogManager = new DialogManager(this);
+
         const map = this.make.tilemap({ key: 'shop' });
     
         const tileset = map.addTilesetImage('Serene_Village_48x48','tileset');
@@ -31,6 +45,43 @@ export default class Shop extends Phaser.Scene{
         const objectLayer=map.getObjectLayer('Object');
         
         this.isWraping = false;
+        this.interactables=[];
+
+        this.villagers=this.physics.add.group();
+
+        const villagerData=[
+            {x:800,y:800,key:'player',startId:'greet',name:'マイク'},
+            {x:1000,y:1000,key:'player',startId:'start',name:'ジェシカ'},
+            {x:1200,y:1200,key:'player',startId:'daily',name:'サンドラ'},
+        ];
+
+        villagerData.forEach(data=>{
+                    //第五引数のdataはNPC.jsでconfigとして受け取る。必要に応じてconfig.startIdで取得できる。第六まで増やす必要もない。
+                    const newVillager=new NPC(this,data.x,data.y,data.key,data);//this忘れ、どこに書けばいいかわからなかったことによるエラー。
+                    this.villagers.add(newVillager);
+        });
+
+        this.villagers.getChildren().forEach(v=>{
+            this.interactables.push({type:'npc',instance:v,x:v.x,y:v.y});
+        });
+
+        //const objectLayer=map.getObjectLayer('Object');
+        if(objectLayer){//家に入る、機械を開いたり、▼が出るアクション
+            objectLayer.objects.forEach(object=>{
+                if(object.name==='door' || object.name==='machine'){
+                    this.interactables.push({
+                        type:object.name,
+                        data:object,
+                        x:object.x+(object.width/2||0),
+                        y:object.y+(object.height/2||0),
+                    });
+                }
+            });
+        }
+
+        this.readyIcon=this.add.text(0,0,'▼',
+            {fontSize:'24px'}
+        ).setOrigin(0.5).setVisible(false).setDepth(10);
         if(objectLayer){
             objectLayer.objects.forEach(obj=>{
                 if(obj.name==='exit'){
@@ -56,7 +107,7 @@ export default class Shop extends Phaser.Scene{
         this.cameras.main.setBounds(0,0,map.widthInPixels,map.heightInPixels);
 
     }
-    update(){
+    update(time,delta){
         const speed = 200;
         this.player.setVelocity(0);
 
@@ -65,5 +116,7 @@ export default class Shop extends Phaser.Scene{
 
         if (this.cursors.up.isDown) this.player.setVelocityY(-speed);
         else if (this.cursors.down.isDown) this.player.setVelocityY(speed);
+
+        this.villagers.getChildren().forEach(v=>v.update(time,delta));
     }
 }
