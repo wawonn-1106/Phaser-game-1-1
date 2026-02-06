@@ -335,6 +335,8 @@ export default class World extends Phaser.Scene{
         this.isWraping = false;
 
         this.input.keyboard.on('keydown-SPACE',()=>{
+            if (this.dialogManager.inputMode) return;
+
             if(this.dialogManager.isTalking){
                 const currentLine=this.dialogManager.currentSequence[this.dialogManager.currentIndex];
                 if(currentLine && currentLine.next){

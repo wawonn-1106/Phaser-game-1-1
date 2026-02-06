@@ -38,6 +38,8 @@ export default class MenuManager{
         }
     }*/
     toggle(tabId='menu'){
+        if(this.worldScene.dialogManager.inputMode||this.worldScene.dialogManager.isTalking)return;
+
         if(!this.isOpenMenu){
             this.openMenu(tabId);
             return;
@@ -49,6 +51,8 @@ export default class MenuManager{
         }
     }
     openMenu(tabId){
+        if(this.worldScene.dialogManager.inputMode||this.worldScene.dialogManager.isTalking)return;
+
         this.isOpenMenu=true;
         //this.window.classList.remove('hidden');
         this.switchTab(tabId);

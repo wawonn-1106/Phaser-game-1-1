@@ -62,6 +62,9 @@ export default class UIScene extends Phaser.Scene{
         }
 
         this.input.on('wheel',(pointer,gameObjects,deltaX,deltaY,deltaZ)=>{
+
+            if (worldScene.dialogManager.isTalking || worldScene.dialogManager.inputMode) return;
+
             if(deltaY>0){
                 this.selectedSlotIndex=(this.selectedSlotIndex+1)%9;
             }else{
@@ -218,24 +221,35 @@ export default class UIScene extends Phaser.Scene{
         const gameWidth=this.scale.width;
         const gameHeight=this.scale.height;
 
-        const inputBg=this.add.image(gameWidth/2,gameHeight/2+250,'input-bg').setDepth(5000);
+        const inputBg=this.add.image(gameWidth/2,gameHeight/2+250,'menu-bg').setDepth(5000);
+        //input-bg↑
 
-        let currentText='';
+        /*const dom=this.add.dom(gameWidth/2,gameHeight/2+250).createFromCache('input').setDepth(10000);
+        dom.node.classList.remove('hidden');*/
+        const dom=this.add.dom(gameWidth/2,gameHeight/2+250).createFromHTML(
+            `<input type="text" id="input-field">`
+        ).setDepth(10000);
+        //dom.classList.remove('hidden');
+
+        const inputField=dom.getChildById('input-field');
+
+        const submitBtn=this.add.image(gameWidth/2,gameWidth/2+300,'player')
+            .setScale(0.1)//↑submit-btn、playerで代用
+            .setInteractive({useHandCursor:true})
+            //.setOrigin(0.5)
+            .setDepth(10000000);
+    
+        /*let currentText='';
         const inputTextDisplay=this.add.text(gameWidth/2,gameHeight/2-20,'',{
             fontSize:'32px',
             color:'#000000'
-        }).setOrigin(0.5).setDepth(5001);
-
-        const submitBtn=this.add.image(gameWidth/2,gameWidth/2+60,'submit-btn')
-            .setInteractive({useHandCursor:true})
-            .setOrigin(0.5)
-            .setDepth(5001);
-        
+        }).setOrigin(0.5).setDepth(5001);*/
+                
         /*const submitText=this.add.text(gameWidth/2,gameHeight/2+60,'決定',{
             fontSize:'20px'
         }).setOrigin(0.5).setDepth(5002);*/
 
-        const keyHandler=(event)=>{
+        /*const keyHandler=(event)=>{
             if(event.key==='Enter'){
                 confirmInput();
             }else if(event.key==='Backspace'){
@@ -246,19 +260,31 @@ export default class UIScene extends Phaser.Scene{
             //inputTextDisplay.setText(currentText+'|');
         };
 
-        this.input.keyboard.on('keydown',keyHandler);
+        this.input.keyboard.on('keydown',keyHandler);*/
 
         const confirmInput=()=>{
-            if(currentText.trim()==='')return;
+            //if(currentText.trim()==='')return;
+            const val=inputField.value.trim();
 
-            this.input.keyboard.off('keydown',keyHandler);
-            this.clearInputFields();
-            callback(currentText);
+            if(val!==''){
+                this.clearInputFields();
+                callback(val);
+            }
+            //this.input.keyboard.off('keydown',keyHandler);
         };
+
+        dom.addListener('keydown');
+        dom.on('keydown',(event)=>{
+            if(event.key==='Enter'){
+                confirmInput();
+            }
+        })
 
         submitBtn.on('pointerdown',confirmInput);
 
-        this.inputFields.push(inputBg,inputTextDisplay,submitBtn);//,submitText除外
+        this.inputFields.push(inputBg,dom,submitBtn);//,submitText除外
+
+        setTimeout(()=>inputField.focus(),100);//自動フォーカス
     }
     clearInputFields(){
         this.inputFields.forEach(field=>field.destroy());
