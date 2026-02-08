@@ -185,7 +185,8 @@ export default class UIScene extends Phaser.Scene{
         if(inventory &&inventory[index]){
             this.dragStartIndex=index;
 
-            this.draggedItem={...inventory[index]};
+            //this.draggedItem={...inventory[index]};
+            this.draggedItem=JSON.parse(JSON.stringify(inventory[index]));
 
             inventory[index]=null;
             this.registry.set('inventoryData',inventory);
@@ -215,10 +216,14 @@ export default class UIScene extends Phaser.Scene{
         this.draggedItem=null;
         this.dragStartIndex=null;
 
-        this.dragIcon.setVisible(true);
-        this.dragCountText.setVisible(true);
+        this.dragIcon.setVisible(false);
+        this.dragCountText.setVisible(false);
 
         this.updateHotbar(inventory);
+
+        if(this.menuManager&& this.menuManager.isOpenMenu){
+            this.menuManager.switchTab('inventory');
+        }
     }
     updateHP(currentHP){
         this.hpHearts.forEach((heart,index)=>{

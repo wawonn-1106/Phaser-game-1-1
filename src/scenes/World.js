@@ -90,7 +90,7 @@ export default class World extends BaseScene{
             this.currentWeather='Clear';//失敗したら晴れ
         }//明日ぐらいにやる
     }*/
-    /*createRain(){
+    createRain(){
         this.weatherEffect=this.add.particles(0,0,'rain',{//画像のダウンロード必要、snowも
             x:{min:0,max:1280},
             y:-10,
@@ -117,7 +117,7 @@ export default class World extends BaseScene{
         overlay.setOrigin(0,0);
         overlay.setScrollFactor(0);
         overlay.setDepth(2000);
-    }*/
+    }
     create(data){
         super.create(data);
 
@@ -142,14 +142,16 @@ export default class World extends BaseScene{
         const map=this.createMap('map','Serene_Village_48x48','tileset');
     
         this.scene.launch('UIScene');
+
+        this.currentWeather==='Rain'
     //----------------------------------------------------------天気------------------------------------------------------------------------------
-        /*if(this.currentWeather==='Rain'){
+        if(this.currentWeather==='Rain'){
             this.createRain();
         }else if(this.currentWeather==='Snow'){
             this.createSnow();
         }else if(this.currentWeather==='Clouds'){
             this.createClouds();
-        }//どちらでもないなら晴れ*/
+        }//どちらでもないなら晴れ
 
     //----------------------------------------------------------操作説明ボタン------------------------------------------------------------------------------
         this.uiScene = this.scene.get('UIScene');
@@ -233,7 +235,7 @@ export default class World extends BaseScene{
     //-------------------------------------------------------------インベントリ--------------------------------------------------------------------------
         this.inventoryManager=new InventoryManager(this);
 
-        this.inventoryData=[
+        /*this.inventoryData=[
             //最終的にはjsonで管理するが、とりあえずインベントリを表示させるためここで
             {id:'apple',name:'りんご',realQuality:1,count:5,isPlaceable:true},
             {id:'seed',name:'種',realQuality:1,count:13,isPlaceable:true},
@@ -244,7 +246,7 @@ export default class World extends BaseScene{
             {id:'egg',name:'卵',realQuality:2,count:5,isPlaceable:true},
             {id:'banana',name:'バナナ',realQuality:3,count:5,isPlaceable:true},
             {id:'pumpkin',name:'かぼちゃ',realQuality:2,count:1,isPlaceable:true}
-        ];//wheatとか全てのidの画像を用意する→
+        ];//wheatとか全てのidの画像を用意する→*/
     //-------------------------------------------------------------カメラ--------------------------------------------------------------------------
        
         this.setupCamera(this.player);
