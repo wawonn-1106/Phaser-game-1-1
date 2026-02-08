@@ -25,6 +25,7 @@ export default class House extends BaseScene{
 
         this.initManagers();
         this.initInput();
+        this.initPlacementPreview();
 
         this.interactables=[];
 
@@ -132,7 +133,10 @@ export default class House extends BaseScene{
 
     }
     update(time,delta){
+        super.update(time, delta);
+
         this.updateInteractables(this.player);
+        this.updatePlacementPreview();
 
         this.player.update();
 

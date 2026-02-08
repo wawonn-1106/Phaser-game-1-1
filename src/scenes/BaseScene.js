@@ -29,6 +29,16 @@ export default class BaseScene extends Phaser.Scene{
         this.initData = data;
         this.isWraping = false;
 
+        let inventory=this.registry.get('inventoryData');
+        if(!inventory){
+            const json=this.cache.json.get('inventoryData');
+            inventory=[...json.items];
+            //これでSceneで毎回jsonを取得しなくてよくなる
+            this.registry.set('inventoryData',inventory);
+        }
+
+        this.inventoryData=inventory;
+
         this.initPlacementPreview();
     }
     initManagers(){
@@ -330,7 +340,10 @@ export default class BaseScene extends Phaser.Scene{
         const ui=this.scene.get('UIScene');
         if(!this.inventoryData)return;
 
-        const selectedItem=this.inventoryData[ui.selectedSlotIndex];
+        const inventory=this.registry.get('inventoryData');
+        if(!inventory)return;
+
+        const selectedItem=inventory[ui.selectedSlotIndex];
 
         if(selectedItem&& selectedItem.isPlaceable){//placeableは後で付ける
             this.placePreview.setVisible(true);
@@ -388,7 +401,12 @@ export default class BaseScene extends Phaser.Scene{
     }
     placeItem(){
         const ui=this.scene.get('UIScene');
-        const selectedItem=this.inventoryData[ui.selectedSlotIndex];
+
+        const inventory=this.registry.get('inventoryData');
+
+        const selectedItem=inventory[ui.selectedSlotIndex];
+        if(!selectedItem)return;
+        //const selectedItem=this.inventoryData[ui.selectedSlotIndex];
 
         const x=this.placePreview.x;
         const y=this.placePreview.y;
@@ -410,8 +428,12 @@ export default class BaseScene extends Phaser.Scene{
         selectedItem.count--;
 
         if(selectedItem.count<=0){
-            this.inventoryData.splice(ui.selectedSlotIndex,1);
+            inventory[ui.selectedSlotIndex]=null;
         }
+
+        this.registry.set('inventoryData',inventory);
+
+        ui.updateHotbar(inventory);
     }
     setupCamera(target){
         this.cameras.main.startFollow(target,true,0.1,0.1);
@@ -426,7 +448,9 @@ export default class BaseScene extends Phaser.Scene{
 
             if(item.type==='fishingSpot'){//釣り竿持ってるときだけ、釣り可能
                 const ui=this.scene.get('UIScene'); 
-                const inventory=this.inventoryData;//Worldから持ってきてるけど今日json形式に変える
+                //const inventory=this.inventoryData;//Worldから持ってきてるけど今日json形式に変える
+                const inventory=this.registry.get('inventoryData');
+
                 const selectedId=inventory[ui.selectedSlotIndex]?.id;
 
                 if(selectedId!=='fishing-rod'){
@@ -436,7 +460,9 @@ export default class BaseScene extends Phaser.Scene{
 
             if(item.type==='rock'){//釣り竿持ってるときだけ、釣り可能
                 const ui=this.scene.get('UIScene');
-                const inventory=this.inventoryData;//Worldから持ってきてるけど今日json形式に変える
+                //const inventory=this.inventoryData;//Worldから持ってきてるけど今日json形式に変える
+                const inventory=this.registry.get('inventoryData');
+
                 const selectedId=inventory[ui.selectedSlotIndex]?.id;
 
                 if(selectedId!=='pickaxe'){

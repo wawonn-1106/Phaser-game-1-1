@@ -24,6 +24,11 @@ export default class UIScene extends Phaser.Scene{
 
         this.maxHp=10;
 
+        this.draggedItem=null;
+        this.dragStartIndex=null;
+        this.dragIcon=null;
+        this.dragCountText=null;
+
         this.gameTime={
             day:1,
             hour:6,
@@ -57,6 +62,21 @@ export default class UIScene extends Phaser.Scene{
 
         this.createClock();
 
+        this.dragIcon=this.add.image(0,0,'').setVisible(false).setDepth(10000);
+        this.dragCountText=this.add.text(0,0,'',{
+            fontSize:'18px',
+            stroke:'#000',
+            strokeThickness:3
+        }).setVisible(false).setDepth(10001);
+
+        this.input.on('pointermove',(pointer)=>{
+            if(this.draggedItem){
+                this.dragIcon.setPosition(pointer.x,pointer.y);
+                
+                this.dragCountText.setPosition(pointer.x+20,pointer.y+20);
+            }
+        })
+
         if(worldScene.inventoryData){
             this.updateHotbar(worldScene.inventoryData);
         }
@@ -75,7 +95,7 @@ export default class UIScene extends Phaser.Scene{
             }
             this.updateSelectorPosition();
 
-            const inventory=worldScene.inventoryData;
+            const inventory=this.registry.get('inventoryData');
             const currentItem=inventory[this.selectedSlotIndex];
 
             if(currentItem&& currentItem.count>0){
@@ -158,6 +178,47 @@ export default class UIScene extends Phaser.Scene{
     updateSelectorPosition(){
         const targetPos=this.hotbarSlots[this.selectedSlotIndex];
         this.selector.setPosition(targetPos.x,targetPos.y);
+    }
+    startDragItem(index){
+        const inventory=this.registry.get('inventoryData');
+
+        if(inventory &&inventory[index]){
+            this.dragStartIndex=index;
+
+            this.draggedItem={...inventory[index]};
+
+            inventory[index]=null;
+            this.registry.set('inventoryData',inventory);
+
+            this.dragIcon.setTexture(this.draggedItem.id).setVisible(true);
+            this.dragCountText.setText(this.draggedItem.count).setVisible(true);
+
+            this.updateHotbar(inventory);
+        }
+    }
+    dropItem(targetIndex){
+        if(!this.draggedItem)return;
+
+        const inventory=this.registry.get('inventoryData');
+        const targetItem=inventory[targetIndex];
+
+        if(targetItem){
+            inventory[this.dragStartIndex]=targetItem;
+
+            inventory[targetIndex]=this.draggedItem;
+        }else{
+            inventory[targetIndex]=this.draggedItem;
+        }
+
+        this.registry.set('inventoryData',inventory);
+
+        this.draggedItem=null;
+        this.dragStartIndex=null;
+
+        this.dragIcon.setVisible(true);
+        this.dragCountText.setVisible(true);
+
+        this.updateHotbar(inventory);
     }
     updateHP(currentHP){
         this.hpHearts.forEach((heart,index)=>{

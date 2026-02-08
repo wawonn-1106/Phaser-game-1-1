@@ -17,6 +17,7 @@ export default class Shop extends BaseScene{
 
         this.initManagers();
         this.initInput();
+        this.initPlacementPreview();
 
         this.interactables=[];
 
@@ -65,7 +66,10 @@ export default class Shop extends BaseScene{
 
     }
     update(time,delta){
+        super.update(time, delta);
+
         this.updateInteractables(this.player);
+        this.updatePlacementPreview();
 
         this.player.update();
 
