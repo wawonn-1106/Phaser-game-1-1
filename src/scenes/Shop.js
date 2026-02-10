@@ -18,6 +18,7 @@ export default class Shop extends BaseScene{
         this.initManagers();
         this.initInput();
         this.initPlacementPreview();
+        this.initDecorationGrid();
 
         this.interactables=[];
 

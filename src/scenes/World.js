@@ -124,6 +124,7 @@ export default class World extends BaseScene{
         this.initManagers();
         this.initInput();
         this.initPlacementPreview();
+        this.initDecorationGrid();
 
         this.interactables=[];
         
@@ -253,6 +254,7 @@ export default class World extends BaseScene{
     }
     update(time,delta){
         super.update(time, delta);
+        //super.update();
 
         this.updateInteractables(this.player);
         this.updatePlacementPreview();

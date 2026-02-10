@@ -67,6 +67,10 @@ export default class BaseScene extends Phaser.Scene{
             .setVisible(false)
             .setDepth(1000);
     }
+    initDecorationGrid(){
+        this.decorationGrid=this.add.graphics();
+        this.decorationGrid.setDepth(20000);
+    }
     createMap(mapKey,tilesetName,tilesetKey){
         this.map=this.make.tilemap({key:mapKey});
         this.tileset=this.map.addTilesetImage(tilesetName,tilesetKey);
@@ -511,6 +515,42 @@ export default class BaseScene extends Phaser.Scene{
         })
 
     }*/
+   setDecorationMode(active){
+        this.isDecorationMode=active;
+        this.decorationGrid.clear();
+
+        console.log('setDecorationModeです');
+
+        if(this.isDecorationMode){
+            this.decorationGrid.lineStyle(1,0xffffff,0.2);
+
+            const gridSize=48;
+
+            const width=this.map.widthInPixels;
+            const height=this.map.heightInPixels;
+
+            console.log(`絵画開始、${width}${height}`);
+            
+            this.decorationGrid.beginPath();
+
+            for(let x=0;x<=width;x+=gridSize){
+                this.decorationGrid.moveTo(x,0);
+
+                this.decorationGrid.lineTo(x,height);
+            }
+
+            for(let y=0;y<=height;y+=gridSize){
+                this.decorationGrid.moveTo(0,y);
+
+                this.decorationGrid.lineTo(width,y);
+            }
+        
+        this.decorationGrid.closePath();
+        this.decorationGrid.strokePath();
+
+        console.log('五目');
+    }
+   }
     updatePlacementPreview(){
         const ui=this.scene.get('UIScene');
         if(!this.inventoryData)return;
@@ -525,7 +565,9 @@ export default class BaseScene extends Phaser.Scene{
             this.placePreview.setTexture(selectedItem.id);
 
             const offset=48;
-            let targetX=this.player.x;
+            const gridSize=48;
+            let targetX=this.player.x+(this.player.flipX ?-gridSize:gridSize);
+            //let targetX=this.player.x;
             let targetY=this.player.y;
 
             if(this.player.flipX){
@@ -534,7 +576,7 @@ export default class BaseScene extends Phaser.Scene{
                 targetX+=offset;
             }
 
-            const gridSize=48;
+            
             const gridX=Math.floor(targetX/gridSize)*gridSize+(gridSize/2);
             const gridY=Math.floor(targetY/gridSize)*gridSize+(gridSize/2);
 
@@ -563,14 +605,16 @@ export default class BaseScene extends Phaser.Scene{
         const checkLayers=[this.onGroundLayer,this.houseLayer];
 
         for(const layer of checkLayers){//for(const A of B){}
-            if (layer && typeof layer.getTileAtWorld === 'function'){
+            //if (layer && typeof layer.getTileAtWorld=== 'function'){
                 //↑getTileAtWorldは関数であると定義、getTileAtWorldはJSの機能じゃないから必要
-                const tile=layer.getTileAtWorld(x,y);
+                if(layer){
+                    const tile=layer.getTileAtWorldXY(x,y);
 
-                if(tile&& tile.collides){
+                    if(tile&& tile.collides){
                     return false;
                 }
-            }
+                }  
+            //}
         }
         return true;
     }
@@ -683,6 +727,13 @@ export default class BaseScene extends Phaser.Scene{
             this.readyActionType=null;
             this.actionTarget=null;
             this.readyIcon.setVisible(false);
+        }
+    }
+    update(){
+        if(this.isDecorationMode){
+            this.updatePlacementPreview();
+        }else{
+            this.placePreview.setVisible(false);
         }
     }
 }

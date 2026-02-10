@@ -66,6 +66,22 @@ export default class UIScene extends Phaser.Scene{
 
         this.createClock();
 
+        this.isDecorationMode=false;
+
+        this.decorationBtn=this.add.image(50,50,'decoration-btn')
+            .setInteractive({useHandCursor:true})
+            .setScale(0.8)
+            .setScrollFactor(0)
+            .setDepth(3000);
+        
+        this.decorationBtn.on('pointerdown',()=>{
+            this.toggleDecorationMode();
+            console.log('切り替わります');
+        });
+
+        this.decorationBtn.on('pointerover',()=>this.decorationBtn.setScale(0.9));
+        this.decorationBtn.on('pointerout',()=>this.decorationBtn.setScale(0.8));
+
         this.cursorIcon=this.add.image(0,0,'').setVisible(false).setDepth(10000);
         this.cursorCountText=this.add.text(0,0,'',{
             fontSize:'18px',
@@ -579,6 +595,15 @@ export default class UIScene extends Phaser.Scene{
                 this.menuManager?.toggle('guide');
             }
         });
+    }
+    toggleDecorationMode(){
+        this.isDecorationMode=!this.isDecorationMode;
+
+        //const worldScene=this.scene.get('World');
+        const activeScene=this.scene.manager.getScenes(true).find(s=>s.scene.key!=='UIScene');
+        if(activeScene){
+            activeScene.setDecorationMode(this.isDecorationMode);
+        }
     }
     startFishing(callback){
         const gameWidth=this.scale.width;

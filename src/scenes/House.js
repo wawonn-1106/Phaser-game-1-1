@@ -26,6 +26,7 @@ export default class House extends BaseScene{
         this.initManagers();
         this.initInput();
         this.initPlacementPreview();
+        this.initDecorationGrid();
 
         this.interactables=[];
 
