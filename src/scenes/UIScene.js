@@ -74,6 +74,38 @@ export default class UIScene extends Phaser.Scene{
         this.decorationBtn.on('pointerover',()=>this.decorationBtn.setScale(0.9));
         this.decorationBtn.on('pointerout',()=>this.decorationBtn.setScale(0.8));
 
+        this.menuBtn=this.add.image(50,120,'menu-btn')
+            .setInteractive({useHandCursor:true})
+            .setScale(0.8)
+            .setScrollFactor(0)
+            .setDepth(3000);
+        
+        this.menuBtn.on('pointerdown',()=>{
+            this.menuManager.toggle('menu');
+            console.log('メニュー開きます');
+        });
+
+        this.menuBtn.on('pointerover',()=>this.menuBtn.setScale(0.9));
+        this.menuBtn.on('pointerout',()=>this.menuBtn.setScale(0.8));
+
+        this.guideButton=this.add.image(1230,670,'guide')
+                .setOrigin(0.5)
+                .setScale(0.7)
+                .setInteractive({useHandCursor:true})
+                .setScrollFactor(0)
+                .setDepth(3000);
+        
+        //if(this.dialogManager && !this.dialogManager.isTalking){
+            this.guideButton.on('pointerover',()=>this.guideButton.setScale(0.8));
+            this.guideButton.on('pointerout',()=>this.guideButton.setScale(0.7));
+        //}
+        
+        this.guideButton.on('pointerdown',()=>{
+           //if(this.dialogManager && !this.dialogManager.isTalking){
+                this.menuManager?.toggle('guide');
+            //}
+        });
+
         this.cursorIcon=this.add.image(0,0,'').setVisible(false).setDepth(10000);
         this.cursorCountText=this.add.text(0,0,'',{
             fontSize:'18px',
@@ -118,7 +150,7 @@ export default class UIScene extends Phaser.Scene{
             }
         });
     }
-    //---------------------ホットバー系------------------------------------------------------------------------------------------------------------------
+//---------------------ホットバー系------------------------------------------------------------------------------------------------------------------
     createHotbar(){
         //if(!this.isDecorationMode)return;
 
@@ -237,7 +269,7 @@ export default class UIScene extends Phaser.Scene{
             this.cursorCountText.setVisible(false);
         }
     }
-    //---------------------ダイアログ系------------------------------------------------------------------------------------------------------------------
+//---------------------ダイアログ系------------------------------------------------------------------------------------------------------------------
     createDialogUI(){
         const gameWidth=this.scale.width;
         const gameHeight=this.scale.height;
@@ -375,7 +407,7 @@ export default class UIScene extends Phaser.Scene{
         this.dialogChoices.forEach(choice=>choice.destroy());
         this.dialogChoices=[];
     }
-    //---------------------日付、時計------------------------------------------------------------------------------------------------------------------
+//---------------------日付、時計------------------------------------------------------------------------------------------------------------------
     createClock(){
         const gameWidth=this.scale.width;
         const x=gameWidth-120;
@@ -425,29 +457,7 @@ export default class UIScene extends Phaser.Scene{
         this.clockText.setText(`${hour}:${minute}:${ampm}`);
 
     }
-    //---------------------ガイドボタン------------------------------------------------------------------------------------------------------------------
-    createGuideBtn(){
-        const guideButton=this.add.image(1230,670,'guide')
-
-                .setOrigin(0.5)
-                .setScale(0.7)
-                .setInteractive({useHandCursor:true})
-                .setScrollFactor(0)
-                .setDepth(3000);
-        
-        if(this.dialogManager && !this.dialogManager.isTalking){
-            guideButton.on('pointerover',()=>guideButton.setScale(0.8));
-            guideButton.on('pointerout',()=>guideButton.setScale(0.7));
-        }//会話中は大きくならないようにしたい。後で修正。
-        
-        guideButton.on('pointerdown',()=>{
-
-            if(this.dialogManager && !this.dialogManager.isTalking){
-                this.menuManager?.toggle('guide');
-            }
-        });
-    }
-    //---------------------デコレーションモード------------------------------------------------------------------------------------------------------------------
+//---------------------デコレーションモード------------------------------------------------------------------------------------------------------------------
     toggleDecorationMode(){
         this.isDecorationMode=!this.isDecorationMode;
 
@@ -484,6 +494,7 @@ export default class UIScene extends Phaser.Scene{
             this.cursorIcon.setPosition(pointer.x,pointer.y);
             this.cursorCountText.setPosition(pointer.x+20,pointer.y+20);
         }
+
         //メニューを開くキーのショートカット
         if(Phaser.Input.Keyboard.JustDown(this.keys.M)){
             this.menuManager.toggle('menu');

@@ -4,6 +4,7 @@ import InventoryManager from '../managers/InventoryManager.js';
 import ProfileManager from '../managers/ProfileManager.js';
 import DictionaryManager from '../managers/DictionaryManager.js';
 import MachineManager from '../managers/MachineManager.js';
+import NPC from "../entities/NPC.js";
 
 export default class BaseScene extends Phaser.Scene{
     constructor(config){
@@ -21,10 +22,12 @@ export default class BaseScene extends Phaser.Scene{
 
         //this.SERVER_URL='http://localhost:3000';
     }
-    //----------初期化-------------------------------------------------------------------------------------------
+//----------初期化-------------------------------------------------------------------------------------------
     create(data){
         this.initData = data;
         this.isWraping = false;
+
+        //this.interactables=[];
 
         let inventory=this.registry.get('inventoryData');
         if(!inventory){
@@ -33,6 +36,20 @@ export default class BaseScene extends Phaser.Scene{
             //これでSceneで毎回jsonを取得しなくてよくなる
             this.registry.set('inventoryData',inventory);
         }
+
+        const allNPCData=this.cache.json.get('NPCData');
+
+        const currentSceneNPCs=allNPCData[this.scene.key];
+
+        this.villagers=this.physics.add.group();
+
+        currentSceneNPCs.forEach(data=>{
+            const newVillager=new NPC(this,data.x,data.y,data.key,data);
+            newVillager.setDepth(100);
+
+            this.villagers.add(newVillager);
+            this.interactables.push({type:'npc',instance:newVillager});
+        });
 
         /*if(this.currentWeather==='Rain'){
             this.createRain();
@@ -75,7 +92,7 @@ export default class BaseScene extends Phaser.Scene{
         this.decorationGrid=this.add.graphics();
         this.decorationGrid.setDepth(20000);
     }
-    //----------マップ(当たり判定、カメラ含む)-------------------------------------------------------------------------------------------
+//----------マップ(当たり判定、カメラ含む)-------------------------------------------------------------------------------------------
     createMap(mapKey,tilesetName,tilesetKey){
         this.map=this.make.tilemap({key:mapKey});
         this.tileset=this.map.addTilesetImage(tilesetName,tilesetKey);
@@ -110,7 +127,7 @@ export default class BaseScene extends Phaser.Scene{
         this.cameras.main.startFollow(target,true,0.1,0.1);
         this.cameras.main.setBounds(0,0,this.map.widthInPixels,this.map.heightInPixels);
     }
-    //----------マップ移動-------------------------------------------------------------------------------------------
+//----------マップ移動-------------------------------------------------------------------------------------------
     setupSceneTransitions(map,player){
         const objectLayer=map.getObjectLayer('Object');
         if(!objectLayer) return;
@@ -226,7 +243,7 @@ export default class BaseScene extends Phaser.Scene{
             this.player.setPosition(x,y);
         }
     }
-    //----------天気-------------------------------------------------------------------------------------------
+//----------天気-------------------------------------------------------------------------------------------
     /*async fetchWeather(){//Rain,Snowを取得。
             const API_KEY=process.env.WEATHER_API_KEY;
             const lat=34.40;
@@ -275,7 +292,7 @@ export default class BaseScene extends Phaser.Scene{
             overlay.setScrollFactor(0);
             overlay.setDepth(2000);
         }*/
-    //----------データ取得-------------------------------------------------------------------------------------------
+//----------データ取得-------------------------------------------------------------------------------------------
     /*async syncMoneyWithServer(newMoney){
         try{
             const response=await fetch(`${this.SERVER_URL}/save`,{
@@ -304,7 +321,7 @@ export default class BaseScene extends Phaser.Scene{
             console.log('読み込み失敗、0円から開始します', error);
         }
     }*/
-    //----------アニメーション-------------------------------------------------------------------------------------------
+//----------アニメーション-------------------------------------------------------------------------------------------
     /*this.anims.create({
                 key:'walking-down',
                 frames:this.anims.generateFrameNumbers('player-walk-down',{start:0,end:12}),
@@ -335,7 +352,7 @@ export default class BaseScene extends Phaser.Scene{
                 frameRate:20,
                 //repeat:0の省略(-1は無限、0は１回)
             });*/
-    //----------アクション系-------------------------------------------------------------------------------------------
+//----------アクション系-------------------------------------------------------------------------------------------
     handleAction(){
         if (this.dialogManager.inputMode) return;
 
@@ -383,52 +400,10 @@ export default class BaseScene extends Phaser.Scene{
                     //店に並べる画面
                     console.log('クリックされた');
                     break;
-                case 'fishingSpot':
-                    //console.log('釣りの開始');
-                    const spot=this.actionTarget;
-
-                    if(spot.isAvailable){
-                        this.player.setVelocity(0);
-                        this.player.body.enable=false;
-
-                        spot.isAvailable=false;//ここでfalseに
-                        if(spot.markerIcon) spot.markerIcon.setVisible(false);
-
-                        const ui=this.scene.get('UIScene');
-                        ui.startFishing((success)=>{
-                            if(success){
-                                console.log('成功');
-
-                                this.time.delayedCall(30000,()=>{
-                                    spot.isAvailable=true;
-                                    if(spot.markerIcon) spot.markerIcon.setVisible(true);
-                                });
-                            }
-                            this.player.body.enable=true;
-                        });
-                    }
-                    break;
-                case 'rock':
-                case 'wood':
-                case 'fence':
-                case 'equipment'://machineがいいなぁ、被る。
-                case 'chest':
-                case 'furniture':
-                case 'tile':
-
-                console.log('ダメージを受けてる');
-                const target=this.interactables.find(i=>i.instance===this.actionTarget);
-                if(!target) return;
-
-                const ui=this.scene.get('UIScene');
-                const inventory=this.registry.get('inventoryData');
-                const selectedItem=inventory[ui.selectedSlotIndex];
-                const toolId=selectedItem? selectedItem.id:'hand';
-                break;
             }
         }                
     }
-    //----------デコレーションモード-------------------------------------------------------------------------------------------
+//----------デコレーションモード-------------------------------------------------------------------------------------------
     setDecorationMode(active){
         this.isDecorationMode=active;
         this.decorationGrid.clear();
@@ -577,37 +552,13 @@ export default class BaseScene extends Phaser.Scene{
 
         ui.updateHotbar(inventory);
     }
-    //-----------------Interactablesの更新------------------------------------------------------------------------------------
+//-----------------Interactablesの更新------------------------------------------------------------------------------------
     updateInteractables(player){
         let minDistance=100;
         let closestItem=null;//機械、ドア、NPCで近いものに▼マークを付ける
         let bestPriority=999;
 
         this.interactables.forEach(item=>{
-
-            /*if(item.type==='fishingSpot'){//釣り竿持ってるときだけ、釣り可能
-                const ui=this.scene.get('UIScene'); 
-                //const inventory=this.inventoryData;//Worldから持ってきてるけど今日json形式に変える
-                const inventory=this.registry.get('inventoryData');
-
-                const selectedId=inventory[ui.selectedSlotIndex]?.id;
-
-                if(selectedId!=='fishing-rod'){
-                    return;
-                }
-            }*/
-
-            /*if(item.type==='rock'){//釣り竿持ってるときだけ、釣り可能
-                const ui=this.scene.get('UIScene');
-                //const inventory=this.inventoryData;//Worldから持ってきてるけど今日json形式に変える
-                const inventory=this.registry.get('inventoryData');
-
-                const selectedId=inventory[ui.selectedSlotIndex]?.id;
-
-                if(selectedId!=='pickaxe'){
-                    return;
-                }
-            }*/
 
             let targetX=item.type==='npc' ? item.instance.x:item.x;
             let targetY=item.type==='npc' ? item.instance.y:item.y;
@@ -649,11 +600,19 @@ export default class BaseScene extends Phaser.Scene{
             this.readyIcon.setVisible(false);
         }
     }
-    update(){
+    update(time,delta){
         if(this.isDecorationMode){
             this.updatePlacementPreview();
         }else{
             this.placePreview.setVisible(false);
+        }
+
+        if(this.player){
+            this.updateInteractables(this.player);
+        }
+
+        if(this.villagers){
+            this.villagers.getChildren().forEach(v=>v.update(time,delta));
         }
     }
 }

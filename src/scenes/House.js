@@ -14,7 +14,8 @@ export default class House extends BaseScene{
         this.initPlacementPreview();
         this.initDecorationGrid();
 
-        this.interactables=[];
+        //this.interactables=[];NPCもBaseでインスタンス化するようにしたのでこれも不要
+        //これがあったら親でインスタンス化してもらったNPCのデータも空にしてしまう
 
         this.scene.launch('UIScene');
 
@@ -25,21 +26,6 @@ export default class House extends BaseScene{
         this.setPlayerSpawnPoint(data);
 
         this.setupSceneTransitions(map, this.player);
-
-        this.villagers=this.physics.add.group();
-
-        const villagerData=[
-            {x:800,y:800,key:'player',startId:'greet',name:'マイク'},
-            {x:1000,y:1000,key:'player',startId:'start',name:'ジェシカ'},
-            {x:1200,y:1200,key:'player',startId:'daily',name:'サンドラ'},
-        ];
-
-        villagerData.forEach(data=>{
-            const newVillager=new NPC(this,data.x,data.y,data.key,data);
-            this.villagers.add(newVillager);
-
-            this.interactables.push({type:'npc',instance:newVillager});
-        });
 
         this.setupCollisions(this.player);
         this.setupCollisions(this.villagers);
@@ -52,11 +38,6 @@ export default class House extends BaseScene{
     update(time,delta){
         super.update(time, delta);
 
-        this.updateInteractables(this.player);
-        this.updatePlacementPreview();
-
         this.player.update();
-
-        this.villagers.getChildren().forEach(v=>v.update(time,delta));
     }
 }

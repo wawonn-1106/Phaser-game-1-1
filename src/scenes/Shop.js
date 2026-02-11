@@ -1,4 +1,4 @@
-import NPC from '../entities/NPC.js';
+//import NPC from '../entities/NPC.js';
 import BaseScene from './BaseScene.js';
 import Player from '../entities/Player.js';
 
@@ -16,8 +16,6 @@ export default class Shop extends BaseScene{
         this.initPlacementPreview();
         this.initDecorationGrid();
 
-        this.interactables=[];
-
         this.scene.launch('UIScene');//Sceneは基本一個づつ表示だが、ShopではShopシーンを消さずにUISceneを立ち上げるように命令。他のSceneでもね。
 
         const map=this.createMap('shop','Serene_Village_48x48','tileset');
@@ -30,21 +28,6 @@ export default class Shop extends BaseScene{
 
         this.setupSceneTransitions(map, this.player);
 
-        this.villagers=this.physics.add.group();
-
-        const villagerData=[
-            {x:800,y:800,key:'player',startId:'greet',name:'マイク'},
-            {x:1000,y:1000,key:'player',startId:'start',name:'ジェシカ'},
-            {x:1200,y:1200,key:'player',startId:'daily',name:'サンドラ'},
-        ];
-
-        villagerData.forEach(data=>{
-            const newVillager=new NPC(this,data.x,data.y,data.key,data);
-            this.villagers.add(newVillager);
-
-            this.interactables.push({type:'npc',instance:newVillager});
-        });
-
         this.setupCollisions(this.player);
         this.setupCollisions(this.villagers);
 
@@ -56,13 +39,10 @@ export default class Shop extends BaseScene{
     update(time,delta){
         super.update(time, delta);
 
-        this.updateInteractables(this.player);
-        this.updatePlacementPreview();
-
         this.player.update();/*イメージしづらいが、this.playerはPlayer.jsで作ったから。
         　　　　　　　　　　　　this.player.updateってここでかいてもShop.jsのupdateは実行されない*/
 
-        this.villagers.getChildren().forEach(v=>v.update(time,delta));
-        //ここのupdateはNPC.jsのupdate。new NPCでインスタンス作ってるから。
+        //this.villagers.getChildren().forEach(v=>v.update(time,delta));
+        //ここのupdateはNPC.jsのupdate。new NPCでインスタンス作ってるから。↑Baseに移動
     }
 }

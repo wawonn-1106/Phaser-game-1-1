@@ -27,6 +27,7 @@ export default class PreloadScene extends Phaser.Scene{
         this.load.json('recipesData','assets/data/recipes.json');
         this.load.json('playerData','assets/data/playerData.json');
         this.load.json('inventoryData','assets/data/inventory.json');
+        this.load.json('NPCData','assets/data/NPC.json');
 //--------------------------------タイトル------------------------------------------------------       
         this.load.image('title','assets/images/title-image.png');
         this.load.image('start-btn','assets/images/start-btn.png');//その場しのぎの画像
@@ -38,6 +39,8 @@ export default class PreloadScene extends Phaser.Scene{
         this.load.image('submit-btn','assets/images/submit-btn.png');
         this.load.image('input-bg','assets/images/choice-btn.png');//まだ
         this.load.image('choice-btn','assets/images/choice-btn.png');
+        this.load.image('decoration-btn','assets/images/decoration-btn.png');
+        this.load.image('menu-btn','assets/images/menu-btn.png');
 
         this.load.image('menu-bg','assets/images/menu-bg.png');
         this.load.image('dialog-bg','assets/images/machine-bg.png');//dialog-bg用意する
