@@ -26,7 +26,7 @@ export default class World extends BaseScene{
 //-------------------------------------------------------マップ---------------------------------------------------------------------------------
         const map=this.createMap('map','Serene_Village_48x48','tileset');
 //----------------------------------------------------------プレイヤー------------------------------------------------------------------------------
-        this.player=new Player(this,500,500,'player');
+        this.player=new Player(this,500,500,'player-walk-down');
 
         this.setPlayerSpawnPoint(data)
 

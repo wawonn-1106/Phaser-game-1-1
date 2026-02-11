@@ -26,6 +26,7 @@ export default class BaseScene extends Phaser.Scene{
     create(data){
         this.initData = data;
         this.isWraping = false;
+        this.initAnimations();
 
         //this.interactables=[];
 
@@ -91,6 +92,39 @@ export default class BaseScene extends Phaser.Scene{
     initDecorationGrid(){
         this.decorationGrid=this.add.graphics();
         this.decorationGrid.setDepth(20000);
+    }
+//----------アニメーション-------------------------------------------------------------------------------------------
+    initAnimations(){
+        this.anims.create({
+            key:'walk-down',
+            frames:this.anims.generateFrameNumbers('player-walk-down',{start:0,end:12}),
+            frameRate:12,
+            repeat:-1
+        });
+        this.anims.create({
+            key:'walk-up',
+            frames:this.anims.generateFrameNumbers('player-walk-up',{start:0,end:11}),
+            frameRate:12,
+            repeat:-1
+        });
+        this.anims.create({
+            key:'walk-right',
+            frames:this.anims.generateFrameNumbers('player-walk-right',{start:25,end:26}),
+            frameRate:2,
+            repeat:-1
+        });
+        this.anims.create({
+            key:'walk-left',
+            frames:this.anims.generateFrameNumbers('player-walk-left',{start:0,end:11}),
+            frameRate:12,
+            repeat:-1
+        });
+        this.anims.create({
+            key:'idle',
+            frames:[{key:'player-walk-down',frame:0}],
+            frameRate:20,
+            //repeat:0の省略(-1は無限、0は１回)
+        });
     }
 //----------マップ(当たり判定、カメラ含む)-------------------------------------------------------------------------------------------
     createMap(mapKey,tilesetName,tilesetKey){
@@ -321,37 +355,6 @@ export default class BaseScene extends Phaser.Scene{
             console.log('読み込み失敗、0円から開始します', error);
         }
     }*/
-//----------アニメーション-------------------------------------------------------------------------------------------
-    /*this.anims.create({
-                key:'walking-down',
-                frames:this.anims.generateFrameNumbers('player-walk-down',{start:0,end:12}),
-                frameRate:12,
-                repeat:-1
-            });
-            this.anims.create({
-                key:'walking-up',
-                frames:this.anims.generateFrameNumbers('player-walk-up',{start:0,end:11}),
-                frameRate:12,
-                repeat:-1
-            });
-            this.anims.create({
-                key:'walking-right',
-                frames:this.anims.generateFrameNumbers('player-walk-right',{start:0,end:11}),
-                frameRate:12,
-                repeat:-1
-            });
-            this.anims.create({
-                key:'walking-left',
-                frames:this.anims.generateFrameNumbers('player-walk-left',{start:0,end:11}),
-                frameRate:12,
-                repeat:-1
-            });
-            this.anims.create({
-                key:'idle',
-                frames:[{key:'player-walk-down',frame:0}],
-                frameRate:20,
-                //repeat:0の省略(-1は無限、0は１回)
-            });*/
 //----------アクション系-------------------------------------------------------------------------------------------
     handleAction(){
         if (this.dialogManager.inputMode) return;

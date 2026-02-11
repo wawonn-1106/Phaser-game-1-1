@@ -18,6 +18,31 @@ export default class PreloadScene extends Phaser.Scene{
         this.load.tilemapTiledJSON('shop','assets/tilemaps/Shop.json');
 //--------------------------------tileset-----------------------------------------------------
         this.load.image('tileset','assets/tilesets/Serene_Village_48x48.png');
+//--------------------------------animation----------------------------------------------------
+        this.load.spritesheet('player-walk-down','assets/images/16x32 All Animations.png',{
+                frameWidth:16,
+                frameHeight:32,
+                margin:0,
+                spacing:0
+        });
+        this.load.spritesheet('player-walk-up','assets/images/16x32 All Animations.png',{
+                frameWidth:16,
+                frameHeight:32,
+                margin:0,
+                spacing:0
+        });
+        this.load.spritesheet('player-walk-right','assets/images/16x32 All Animations.png',{
+                frameWidth:16,
+                frameHeight:32,
+                margin:0,
+                spacing:0
+        });
+        this.load.spritesheet('player-walk-left','assets/images/16x32 All Animations.png',{
+                frameWidth:16,
+                frameHeight:32,
+                margin:0,
+                spacing:0
+        });
 //--------------------------------天気------------------------------------------------------
         this.load.image('rain','assets/images/player.png');
         this.load.image('snow','assets/images/player.png');
