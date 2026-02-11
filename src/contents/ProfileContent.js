@@ -4,240 +4,59 @@ export default class ProfileContent{
         this.worldScene=this.uiScene.scene.get('World');
         this.graphics=null;
 
-        /*this.container=this.scene.add.container(0,0);
-        this.graphics=this.scene.add.graphics();
-        this.container.add(this.graphics);*/
-
         this.statLabels=[];
-        
-        //this.setVisible(false);
-        //this.chartTarget=null;
-        //this.drawRadarChart();
     }
-    /*updatePosition(){
-        if(!this.container.visible || !this.chartTarget)return;
-
-        //const target=document.getElementById('radar-chart-container');
-
-        const rect=this.chartTarget.getBoundingClientRect();
-
-        this.container.setPosition(
-            rect.left+rect.width/2,
-            rect.top+rect.height/2
-        );
-    }
-    setVisible(visible){
-        this.container.setVisible(visible);
-
-        if(visible){
-            this.drawRadarChart();
-            this.updatePosition();
-        }
-    }*/
     createView(){
         const container=this.uiScene.add.container(0,0);
 
-        const bg=this.uiScene.add.image(0,0,'menu-bg').setDisplaySize(1000,600);
-        container.add(bg);
-
-        //const container=document.createElement('div');
-        //container.classList.add('profile-container');
-        const player=this.worldScene.player;
-        const nameText=this.uiScene.add.text(-350,-220,`名前：${player.name}`,{
+        const frontSide=this.uiScene.add.container(0,0);
+        const frontBg=this.uiScene.add.image(0,0,'profile-front-bg').setDisplaySize(1000,600);
+        const nameText=this.uiScene.add.text(-350,-220,`名前：`,{
             fontSize:'32px',
-            color:'#000000',
-            fontStyle:'bold'
-        });
-
-        const editBtn=this.uiScene.add.text(-350,-170,'[名前を変更する]',{
-            fontSize:'20px',
             color:'#000000'
-        }).setInteractive({useHandCursor:true});
-
-        container.add([nameText,editBtn]);
-
-
-        /*const nameDisplay=document.createElement('span');
-        nameDisplay.textContent=this.scene.player.name;
-
-        //編集の時の入力欄
-        const input=document.createElement('input');
-        input.value=this.scene.player.name;
-        input.classList.add('hidden');
-
-        //保存ボタン
-        const saveBtn=document.createElement('button');
-        saveBtn.textContent='保存';
-        saveBtn.classList.add('hidden');
-
-        //編集開始ボタン
-        const editBtn=document.createElement('button');
-        editBtn.textContent='編集';*/
-
-        //グラフの入れ物
-        const chartContainer=this.uiScene.add.container(150,0);
-        this.graphics=this.uiScene.add.graphics();
-        chartContainer.add(this.graphics);
-        container.add(chartContainer);
-
-        this.drawRadarChart(player.stats,chartContainer);
-        /*const chartContainer=document.createElement('div');
-        chartContainer.classList.add('radar-chart-container');
-        this.chartTarget = chartContainer;*/
-
-        editBtn.on('pointerdown',()=>{
-            this.uiScene.showInputFields((newName)=>{
-                this.worldScene.profileManager.initTutorialProfile(newName);
-                //player.name=newName;
-                nameText.setText(`名前：${this.worldScene.profileManager.playerData.name}`);
-
-                this.drawRadarChart(this.worldScene.profileManager.playerData.stats,chartContainer);
-
-                /*if(newName.includes('尾道')){
-                    this.worldScene.profileManager.initTutorialProfile(newName);
-                    this.drawRadarChart(player.stats,chartContainer);
-                }*/
-            });
         });
 
-            /*nameDisplay.classList.add('hidden');
-            editBtn.classList.add('hidden');
-            saveBtn.classList.remove('hidden');
-            input.classList.remove('hidden');
-            input.focus();
-        }*/
+        const photo=this.uiScene.add.rectangle(-300,0,200,250,0xcccccc);
 
-        /*saveBtn.onclick=()=>{
-            const newName=input.value.trim();
+        frontSide.add([frontBg,nameText,photo]);
 
-            if(newName){
-                this.scene.player.name=newName;
-                nameDisplay.textContent=newName;
+        const backSide=this.uiScene.add.container(0,0);
+        const backBg=this.uiScene.add.image(0,0,'profile-back-bg').setDisplaySize(1000,600);
 
-                this.drawRadarChart();
-            }
-            nameDisplay.classList.remove('hidden');
-            editBtn.classList.remove('hidden');
-            saveBtn.classList.add('hidden');
-            input.classList.add('hidden');
+        backSide.add(backBg);
+
+        backSide.scaleX=0;
+
+        container.add([backSide,frontSide]);
+
+        let isFront=true;
+
+        frontBg.setInteractive({useHandCursor:true});
+        backBg.setInteractive({useHandCursor:true});
+
+        const flipCard=()=>{
+            const outTarget=isFront? frontSide: backSide;
+            const inTarget=isFront? backSide: frontSide;
+
+            this.uiScene.tweens.add({
+                targets:outTarget,
+                scaleX:0,
+                duration:200,
+                onComplete:()=>{
+                    isFront=!isFront;
+                    this.uiScene.tweens.add({
+                        targets:inTarget,
+                        scaleX:1,
+                        duration:200
+                    });
+                }
+            });    
         }
 
-        /*container.appendChild(input);
-        container.appendChild(saveBtn);
-        container.appendChild(editBtn);
-        container.appendChild(nameDisplay);
-        container.appendChild(chartContainer);
-        //if(input.value.trim()==='尾道') 満たしていたら５V*/
+        frontBg.on('pointerdown',flipCard);
+        backBg.on('pointerdown',flipCard);
 
         return container;
-
-    }
-    drawRadarChart(stats,chartContainer){
-        //if(!this.chartTarget) return;
-
-        //this.chartTarget.innerHTML='';
-
-        /*const canvas=document.createElement('canvas');
-        const size=250;
-        canvas.width=size;
-        canvas.height=size;
-        const ctx=canvas.getContext('2d');
-        const center=size/2;
-
-        const manager=this.scene.profileManager;
-        const stats=this.scene.player.stats;
-        const radius=80;
-
-        const bgPoints=manager.getPoints(radius,null);
-        const pPoints=manager.getPoints(radius,stats);
-
-        const maxRadius = 80;
-
-        ctx.translate(center,center);
-
-        ctx.strokeStyle = '#eeeeee'; // 薄いグレー
-        ctx.lineWidth = 1;
-
-    
-        [5, 10, 15, 20, 25].forEach(val => {
-            // 各段階の半径を計算
-            const r = (val / 25) * maxRadius;
-            const points = manager.getPoints(r, null);
-
-            ctx.beginPath();
-            points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-            ctx.closePath();
-            ctx.stroke();
-
-            if (val === 25) {
-                points.forEach(p => {
-                    ctx.beginPath();
-                    ctx.moveTo(0, 0);
-                    ctx.lineTo(p.x, p.y);
-                    ctx.strokeStyle = '#dddddd';
-                    ctx.stroke();
-                });
-            }
-        });
-
-        ctx.beginPath();
-        bgPoints.forEach((p,i)=>i===0 ? ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
-        ctx.closePath();
-        ctx.strokeStyle='#ccc';
-        ctx.stroke();
-
-        ctx.beginPath();
-        pPoints.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-        ctx.closePath();
-        ctx.fillStyle = 'rgba(51, 255, 51, 0.5)';
-        ctx.fill();
-        ctx.strokeStyle = '#33ff33';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        ctx.fillStyle = 'black';
-        ctx.font = '14px Arial';
-        ctx.textAlign = 'center';
-        manager.statList.forEach((s, i) => {
-            const p = bgPoints[i];
-            ctx.fillText(s.label, p.x * 1.3, p.y * 1.3);
-        });
-
-        this.chartTarget.appendChild(canvas);*/
-
-        this.graphics.clear();
-
-        this.statLabels.forEach(label=>label.destroy());
-        this.statLabels=[];
-
-        const manager=this.worldScene.profileManager;
-        const statsArg=stats||manager.playerData.stats;
-        const radius=150;
-
-        const bgPoints=manager.getPoints(radius,null);
-        const pPoints=manager.getPoints(radius,statsArg);
-
-        this.graphics.lineStyle(1,0x000000,0.3).strokePoints(bgPoints,true);//黒
-        this.graphics.fillStyle(0x33ff33,0.5).lineStyle(2,0x33ff33,1);//緑
-        this.graphics.beginPath().moveTo(pPoints[0].x,pPoints[0].y);
-        pPoints.forEach(p=>this.graphics.lineTo(p.x,p.y));
-        this.graphics.closePath().fillPath().strokePath();
-
-        manager.statList.forEach((s,i)=>{
-            const p=bgPoints[i];
-
-            const labelX=p.x*1.2;
-            const labelY=p.y*1.2;
-
-            const text=this.uiScene.add.text(labelX,labelY,s.label,{
-                fontSize:'14px',
-                color:'black',
-                align:'center'
-            }).setOrigin(0.5);//どの個体値か
-
-            chartContainer.add(text);
-            this.statLabels.push(text);
-        });
 
     }
 }

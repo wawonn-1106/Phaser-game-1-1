@@ -585,7 +585,7 @@ export default class BaseScene extends Phaser.Scene{
 
         this.interactables.forEach(item=>{
 
-            if(item.type==='fishingSpot'){//釣り竿持ってるときだけ、釣り可能
+            /*if(item.type==='fishingSpot'){//釣り竿持ってるときだけ、釣り可能
                 const ui=this.scene.get('UIScene'); 
                 //const inventory=this.inventoryData;//Worldから持ってきてるけど今日json形式に変える
                 const inventory=this.registry.get('inventoryData');
@@ -595,9 +595,9 @@ export default class BaseScene extends Phaser.Scene{
                 if(selectedId!=='fishing-rod'){
                     return;
                 }
-            }
+            }*/
 
-            if(item.type==='rock'){//釣り竿持ってるときだけ、釣り可能
+            /*if(item.type==='rock'){//釣り竿持ってるときだけ、釣り可能
                 const ui=this.scene.get('UIScene');
                 //const inventory=this.inventoryData;//Worldから持ってきてるけど今日json形式に変える
                 const inventory=this.registry.get('inventoryData');
@@ -607,7 +607,7 @@ export default class BaseScene extends Phaser.Scene{
                 if(selectedId!=='pickaxe'){
                     return;
                 }
-            }
+            }*/
 
             let targetX=item.type==='npc' ? item.instance.x:item.x;
             let targetY=item.type==='npc' ? item.instance.y:item.y;

@@ -28,7 +28,7 @@ export default class MenuManager{
             'machine':new MachineContent(uiScene)
         };
     }
-    toggle(tabId='menu'){
+    toggle(tabId){
         if(this.worldScene.dialogManager.inputMode||this.worldScene.dialogManager.isTalking)return;
 
         if(!this.isOpenMenu){

@@ -51,7 +51,7 @@ export default class UIScene extends Phaser.Scene{
 
         this.keys=this.input.keyboard.addKeys('M,I,P,A,R,S,D');
 
-        this.createHealthBar();
+        //this.createHealthBar();
         this.createHotbar();
 
         this.createDialogUI();
@@ -87,8 +87,6 @@ export default class UIScene extends Phaser.Scene{
                 if(this.heldItem&& !this.isPointerOver(pointer)){
                     this.dropItemToWorld();
                 }
-                //this.dragIcon.setPosition(pointer.x,pointer.y);
-                //this.dragCountText.setPosition(pointer.x+20,pointer.y+20);
             }
         });
 
@@ -119,29 +117,8 @@ export default class UIScene extends Phaser.Scene{
                 activeScene.player.updateHeldItem(null);
             }
         });
-
-        //his.input.setTopOnly(true);
     }
-    createHealthBar(){
-        const startX=30;
-        const y=50;
-        for(let i=0;i<this.maxHp;i++){
-
-            const heart=this.add.image(startX+(i*35),y,'heart').setScale(0.08);
-            this.hpHearts.push(heart);
-
-            this.tweens.add({
-                targets:heart,
-                scale:0.1,
-                duration:600,
-                yoyo:true,
-                repeat:-1,
-                ease:'Sine.easeInOut',
-                //delay:i*100 波打ちのような感じ
-            });//これいらんな
-        }
-
-    }//↓明日書き直す
+    //---------------------ホットバー系------------------------------------------------------------------------------------------------------------------
     createHotbar(){
         //if(!this.isDecorationMode)return;
 
@@ -152,9 +129,7 @@ export default class UIScene extends Phaser.Scene{
 
         this.hotbar=this.add.image(gameWidth/2,y,'hotbar')
             .setScale(1.8,0.3)
-            .setVisible(this.isDecorationMode);//'hotbar
-        /*const slotCount=9;
-        const slotSize=60;*/
+            .setVisible(this.isDecorationMode);
         
         const spacing=33;
         const startX=(gameWidth/2)-(spacing*4);
@@ -163,7 +138,6 @@ export default class UIScene extends Phaser.Scene{
         
         for(let i=0;i<9;i++){
 
-            //const slot=this.add.rectangle(startX+(i*slotSize),y,50,50,0).setStrokeStyle(2,0xffffff);
             this.hotbarSlots.push({
                 x:startX+(i*spacing),
                 y:y
@@ -216,12 +190,9 @@ export default class UIScene extends Phaser.Scene{
         if(!this.heldItem && clickedItem&&clickedItem.id!==null){
             this.heldItem=JSON.parse(JSON.stringify(clickedItem));
             inventory[targetIndex]={id:null,count:0};
-            //inventory[this.dragStartIndex]=targetItem;
-            //inventory[targetIndex]=this.draggedItem;
             
         }else if(this.heldItem){
             if(clickedItem&& clickedItem.id===this.heldItem.id){
-                //const maxStack=64;
 
                 const spaceLeft=maxStack-clickedItem.count;
                 const amountAdd=Math.min(spaceLeft,this.heldItem.count);
@@ -246,16 +217,6 @@ export default class UIScene extends Phaser.Scene{
             this.menuManager.switchTab('inventory');
         }
     }
-    dropItemToWorld(){
-        if(!this.heldItem)return;
-
-        const worldScene=this.scene.get('World');
-
-        worldScene.spawnItemNearPlayer(this.heldItem);
-
-        this.heldItem=null;
-        this.updateCursorVisual();
-    }
     isPointerOver(pointer){
         if(!this.menuManager.isOpenMenu)return false;
 
@@ -276,15 +237,7 @@ export default class UIScene extends Phaser.Scene{
             this.cursorCountText.setVisible(false);
         }
     }
-    updateHP(currentHP){
-        this.hpHearts.forEach((heart,index)=>{
-            if(index<currentHP){
-                heart.setVisible(true).setAlpha(1);
-            }else{
-                heart.setAlpha(0.2);
-            }
-        });
-    }
+    //---------------------ダイアログ系------------------------------------------------------------------------------------------------------------------
     createDialogUI(){
         const gameWidth=this.scale.width;
         const gameHeight=this.scale.height;
@@ -310,13 +263,6 @@ export default class UIScene extends Phaser.Scene{
             wordWrap:{width:500},
             lineSpacing:10,
             padding: { top: 10 },//他の会話のやつもこれ入れる
-            //interactive:true,
-            /*tags:{
-                area:{
-                    mode:'click'
-                }
-            },
-            area:true*/
         }).setDepth(4005).setVisible(false);
 
         this.dialogContentText.setInteractive();
@@ -345,7 +291,6 @@ export default class UIScene extends Phaser.Scene{
         }
     }
     showInputField(callback){
-        //また今度にしよ
         this.clearInputFields();
 
         const gameWidth=this.scale.width;
@@ -354,12 +299,9 @@ export default class UIScene extends Phaser.Scene{
         const inputBg=this.add.image(gameWidth/2,gameHeight/2+250,'menu-bg').setDepth(5000);
         //input-bg↑
 
-        /*const dom=this.add.dom(gameWidth/2,gameHeight/2+250).createFromCache('input').setDepth(10000);
-        dom.node.classList.remove('hidden');*/
         const dom=this.add.dom(gameWidth/2,gameHeight/2+250).createFromHTML(
             `<input type="text" id="input-field">`
         ).setDepth(10000);
-        //dom.classList.remove('hidden');
 
         const inputField=dom.getChildByID('input-field');//IdではなくID
 
@@ -377,7 +319,6 @@ export default class UIScene extends Phaser.Scene{
                 this.clearInputFields();
                 callback(val);
             }
-            //this.input.keyboard.off('keydown',keyHandler);
         };
 
         dom.addListener('keydown');
@@ -389,7 +330,7 @@ export default class UIScene extends Phaser.Scene{
 
         submitBtn.on('pointerdown',confirmInput);
 
-        this.inputFields.push(inputBg,dom,submitBtn);//,submitText除外
+        this.inputFields.push(inputBg,dom,submitBtn);
 
         setTimeout(()=>inputField.focus(),100);//自動フォーカス
     }
@@ -434,6 +375,7 @@ export default class UIScene extends Phaser.Scene{
         this.dialogChoices.forEach(choice=>choice.destroy());
         this.dialogChoices=[];
     }
+    //---------------------日付、時計------------------------------------------------------------------------------------------------------------------
     createClock(){
         const gameWidth=this.scale.width;
         const x=gameWidth-120;
@@ -483,8 +425,9 @@ export default class UIScene extends Phaser.Scene{
         this.clockText.setText(`${hour}:${minute}:${ampm}`);
 
     }
+    //---------------------ガイドボタン------------------------------------------------------------------------------------------------------------------
     createGuideBtn(){
-        const guideButton=this.add.image(1230,670,'guide')//UISceneに移行する
+        const guideButton=this.add.image(1230,670,'guide')
 
                 .setOrigin(0.5)
                 .setScale(0.7)
@@ -495,7 +438,7 @@ export default class UIScene extends Phaser.Scene{
         if(this.dialogManager && !this.dialogManager.isTalking){
             guideButton.on('pointerover',()=>guideButton.setScale(0.8));
             guideButton.on('pointerout',()=>guideButton.setScale(0.7));
-        }//会話中は大きくならないようにしたい、なんかできないから。後で修正。
+        }//会話中は大きくならないようにしたい。後で修正。
         
         guideButton.on('pointerdown',()=>{
 
@@ -504,17 +447,18 @@ export default class UIScene extends Phaser.Scene{
             }
         });
     }
+    //---------------------デコレーションモード------------------------------------------------------------------------------------------------------------------
     toggleDecorationMode(){
         this.isDecorationMode=!this.isDecorationMode;
 
-        this.hotbar?.setVisible(this.isDecorationMode);
+        this.hotbar?.setVisible(this.isDecorationMode);/*this.hotbar?。この?はthis.hotbarがなかったら無視
+        不測のエラーを防げて便利だが、使いすぎるとエラーの原因がわからなくなるから注意*/
+        
         this.selector?.setVisible(this.isDecorationMode);
-        //this.heldItem?.setVisible(this.isDecorationMode);
 
         this.hotbarIcons.forEach(icon=>icon?.setVisible(this.isDecorationMode));
         this.hotbarTexts.forEach(text=>text?.setVisible(this.isDecorationMode));
 
-        //const worldScene=this.scene.get('World');
         const activeScene=this.scene.manager.getScenes(true).find(s=>s.scene.key!=='UIScene');
         if(activeScene){
             activeScene.setDecorationMode(this.isDecorationMode);

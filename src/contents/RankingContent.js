@@ -41,7 +41,8 @@ export default class RankingContent{
         const title=this.uiScene.add.text(0,-260,'部門別ランキング🏆',{
             fontSize:'32px',
             color:'#000000',
-            fontStyle:'bold'
+            fontStyle:'bold',
+            padding: { top: 10 }
         }).setOrigin(0.5);
 
         container.add(title);

@@ -21,10 +21,10 @@ export default class World extends BaseScene{
         this.initDecorationGrid();
 
         this.interactables=[];
+
+        this.scene.launch('UIScene');
     //-------------------------------------------------------マップ---------------------------------------------------------------------------------
         const map=this.createMap('map','Serene_Village_48x48','tileset');
-    
-        this.scene.launch('UIScene');
     //----------------------------------------------------------操作説明ボタン------------------------------------------------------------------------------
         this.uiScene = this.scene.get('UIScene');
         this.uiScene.createGuideBtn();
@@ -53,6 +53,7 @@ export default class World extends BaseScene{
             this.villagers.add(newVillager);
 
             this.interactables.push({type:'npc',instance:newVillager});
+            //this.interactables配列にnpcというtype,newVillagerをinstanceとしてそれぞれ追加。
         });
     //----------------------------------------------------------当たり判定----------------------------------------------------------------------
         this.setupCollisions(this.player);

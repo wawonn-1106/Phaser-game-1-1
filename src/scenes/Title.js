@@ -5,7 +5,9 @@ export default class Title extends Phaser.Scene{
     create(){
         if (this.scene.isActive('UIScene')) {
             this.scene.stop('UIScene');
-        }//これがないとタイトルに戻れない。returnTitleでUiSceneもfadeoutしたから
+        }/*Sceneでlaunch('UIScene')で起動したものをstop('UIScene')
+        しないと、前起動したものが残り、タイトルに戻ってまたスタートする時に、UISceneが起動してあるのに
+        起動してしまってエラーになる*/
 
         this.add.image(640,360,'title');
 
