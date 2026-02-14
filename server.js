@@ -74,7 +74,7 @@ app.post('/save',async(req,res)=>{
         }
 
         const player=await Player.findOneAndUpdate(
-            {_id: "698d4a83b16e85a9124a347f"},
+            {},
             updateData,{
             upsert:true,
             new:true

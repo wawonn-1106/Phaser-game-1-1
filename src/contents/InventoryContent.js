@@ -11,13 +11,15 @@ export default class InventoryContent{
         container.add(bg);
 
         const items=this.uiScene.registry.get('inventoryData');
+        const maxSlots=this.uiScene.registry.get('maxInventorySlots')||10;//後で追加
 
         const startX=-410;
         const backPackStartY=-125;
         const hotbarStartY=175;
         const slotSize=102;
 
-        items.forEach((item,index)=>{
+        for(let index=0;index<maxSlots;index++){
+            const item=items[index];
             const isHotbar=index<9;
 
             let x,y;
@@ -33,6 +35,9 @@ export default class InventoryContent{
                 x=startX+(col*slotSize);
                 y=backPackStartY+(row*slotSize);
             }
+            const slotBg=this.uiScene.add.rectangle(x,y,90,90,0x000000,0.3);
+            container.add(slotBg);//temp
+
             const itemContainer = this.uiScene.add.container(x, y);
             container.add(itemContainer);
 
@@ -75,7 +80,7 @@ export default class InventoryContent{
                 this.uiScene.handleInteraction(index);
             });
 
-        });
+        }
 
         return container;
     }

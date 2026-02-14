@@ -131,7 +131,7 @@ export default class DialogManager {
         textContent.setText(displayTerm);
 
         textContent.on('areaclick',(areaKey)=>{
-            const world=this.scene;
+            const world=this.scene;//BaseScene
             const termData = world.dictionaryManager.getTermByWord(areaKey);
 
             if(termData){

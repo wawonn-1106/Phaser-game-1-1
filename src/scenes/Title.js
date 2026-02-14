@@ -1,7 +1,7 @@
 export default class Title extends Phaser.Scene{
     constructor(){
         super({key:'Title'});
-        this.SERVER_URL='http://localhost:3000';
+        this.SERVER_URL='http://127.0.0.1:3000';
     }
     create(){
         if (this.scene.isActive('UIScene')) {
@@ -75,10 +75,13 @@ export default class Title extends Phaser.Scene{
     async resetGameRegistry(){
         const defaultPlayerData=this.cache.json.get('playerData');
         const defaultNPCData=this.cache.json.get('NPCData');
+        const defaultInventoryData=this.cache.json.get('inventoryData');
+
+        //console.log("JSONロード結果:", defaultInventoryData);
 
         this.registry.set('money',0);
         this.registry.set('unlockedIds',[]);
-        this.registry.set('inventoryData',defaultPlayerData?.item||[]);
+        this.registry.set('inventoryData',defaultInventoryData?.items||[]);
         this.registry.set('placedItems',[]);
         this.registry.set('playerPosition',defaultPlayerData.playerPosition);
         this.registry.set('npcPositions',defaultNPCData.initialNPCs||[]);

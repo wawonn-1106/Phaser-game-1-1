@@ -33,6 +33,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
     }
     update(){
         if(!this.active) return;
+
+        const ui=this.scene.scene.get('UIScene');
+        const isMenuOpen=ui.menuManager.isOpenMenu;
+        const isTalking=this.scene.dialogManager.isTalking;
+
+        if(isMenuOpen||isTalking){
+            this.setVelocity(0);
+            return;
+        }
+
         let moving=false;
 
         const isRightDown=this.cursors.right.isDown;

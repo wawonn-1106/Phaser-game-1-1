@@ -2,11 +2,11 @@ export default class DictionaryManager{
     constructor(scene){//BaseScene
         this.scene=scene;
     }
-    /*getTerms(){
+    getTerms(){
         const data=this.scene.cache.json.get('termsData');
 
         return data ? data.terms : [];
-    }*///→DictionaryContentでやるように変更
+    }
     getTermByWord(wordName){//クリックした単語と同じのを探す
         const terms=this.getTerms();
 

@@ -22,7 +22,8 @@ export default class BaseScene extends Phaser.Scene{
         this.placePreview=null;
         this.canPlace=false;
 
-        this.SERVER_URL='http://localhost:3000';
+        this.SERVER_URL='http://127.0.0.1:3000';
+        this.isSaving=false;
         //this.WEATHER_SERVER_URL='http://localhost:3000';
     }
 //----------初期化-------------------------------------------------------------------------------------------
@@ -88,6 +89,7 @@ export default class BaseScene extends Phaser.Scene{
         //this.uiScene=new UIScene(this);勘違いしてた。Sceneはインスタンスじゃなくてscene.get('')で取得する
         const ui=this.scene.get('UIScene'); 
         this.dialogManager.setUIScene(ui);
+        ui.dictionaryManager = this.dictionaryManager;
     }
     initInput(){
         this.cursors=this.input.keyboard.createCursorKeys();
@@ -302,6 +304,10 @@ export default class BaseScene extends Phaser.Scene{
         const ui=this.scene.get('UIScene');
         ui.setVisibleUI(false);
 
+        if(ui.isDecorationMode){
+            ui.toggleDecorationMode();
+        }
+
         this.isWraping=true;
 
         this.player.body.enable=false;
@@ -365,6 +371,12 @@ export default class BaseScene extends Phaser.Scene{
     }
 //----------データ保存-------------------------------------------------------------------------------------------
     async saveGameData(){
+        if(this.isSaving){
+            console.log('セーブ中なのでスキップ');
+            return;
+        }
+        this.isSaving=true;
+
         try{
             //const villagersArray = this.villagers.getChildren();
             //console.log("セーブ対象のNPC数:", villagersArray.length);
@@ -419,6 +431,8 @@ export default class BaseScene extends Phaser.Scene{
 
         }catch(error){
             console.log('セーブ失敗',error);
+        }finally{
+            this.isSaving=false;
         }
     }
     /*async recordSale(saleInfo){
@@ -462,6 +476,9 @@ export default class BaseScene extends Phaser.Scene{
     }
 //----------アクション系-------------------------------------------------------------------------------------------
     handleAction(){
+        const ui=this.scene.get('UIScene');
+        if(ui.menuManager&& ui.menuManager.isOpenMenu)return;
+
         if (this.dialogManager.inputMode) return;
 
         if(this.dialogManager.isTalking){

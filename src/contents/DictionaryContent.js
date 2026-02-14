@@ -76,8 +76,7 @@ export default class DictionaryContent{
         scrollContent.setMask(mask);
 
 
-        const data=this.uiScene.cache.json.get('termsData');
-        const terms=data? data.terms:[];
+        const terms=this.uiScene.dictionaryManager.getTerms();
 
         const listContainer=this.uiScene.add.container(-450,-200);
         container.add(listContainer);

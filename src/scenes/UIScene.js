@@ -1,6 +1,7 @@
 import MenuManager from "../managers/MenuManager.js";
 import DictionaryContent from "../contents/DictionaryContent.js";
 import MachineContent from "../contents/MachineContent.js";
+//import DictionaryManager from "../managers/DictionaryManager.js";
 
 export default class UIScene extends Phaser.Scene{
     constructor(){
@@ -40,7 +41,8 @@ export default class UIScene extends Phaser.Scene{
     create(){
         const worldScene=this.scene.get('World');
 
-        this.dictionaryContent = new DictionaryContent(this);
+        this.dictionaryContent = new DictionaryContent(this);//createQuickViewのため
+        //this.dictionaryManager=new DictionaryManager();//DCでgetTermsするため
         this.menuManager=new MenuManager(this,worldScene);
         this.machineContent = new MachineContent(this);
         worldScene.menuManager=this.menuManager;
@@ -234,11 +236,13 @@ export default class UIScene extends Phaser.Scene{
         const clickedItem=inventory[targetIndex];
         const maxStack=64;
 
-        if(!this.heldItem && clickedItem&&clickedItem.id!==null){
-            this.heldItem=JSON.parse(JSON.stringify(clickedItem));
-            inventory[targetIndex]={id:null,count:0};
+        if(!this.heldItem){
+            if(clickedItem.id!==null&& clickedItem.count>0){
+                this.heldItem=JSON.parse(JSON.stringify(clickedItem));
+                inventory[targetIndex]={id:null,count:0};
+            }
             
-        }else if(this.heldItem){
+        }else{
             if(clickedItem&& clickedItem.id===this.heldItem.id){
 
                 const spaceLeft=maxStack-clickedItem.count;
@@ -252,7 +256,7 @@ export default class UIScene extends Phaser.Scene{
                 const tempItem=JSON.parse(JSON.stringify(clickedItem))||{id:null,count:0};
                 inventory[targetIndex]=JSON.parse(JSON.stringify(this.heldItem));
 
-                this.heldItem=tempItem===null? null:tempItem;
+                this.heldItem=(tempItem===null)? null:tempItem;
             }
         }
         this.registry.set('inventoryData',inventory);
@@ -474,6 +478,10 @@ export default class UIScene extends Phaser.Scene{
     }
 //---------------------デコレーションモード------------------------------------------------------------------------------------------------------------------
     toggleDecorationMode(){
+        if(this.menuManager&& this.menuManager.isOpenMenu){
+            this.menuManager.closeMenu();
+        }
+        
         this.isDecorationMode=!this.isDecorationMode;
 
         this.hotbar?.setVisible(this.isDecorationMode);/*this.hotbar?。この?はthis.hotbarがなかったら無視
